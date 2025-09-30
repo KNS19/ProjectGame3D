@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://doh0w0if3r85g"]
+[gd_scene load_steps=6 format=3 uid="uid://doh0w0if3r85g"]
 
 [ext_resource type="Script" uid="uid://c0lwvfs2cg8bq" path="res://character_new.gd" id="1_7egtf"]
 [ext_resource type="PackedScene" uid="uid://cddk6u341gjwm" path="res://weapons/Assault Rifle.glb" id="2_pjt0s"]
+[ext_resource type="PackedScene" uid="uid://bgxqu6dnybtbf" path="res://Character/Adventurer.tscn" id="2_wa5vi"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8wiiv"]
 
@@ -12,12 +13,16 @@ collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_7egtf")
 
+[node name="CSGMesh3D" parent="." instance=ExtResource("2_wa5vi")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0.181169)
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_8wiiv")
 
-[node name="CSGMesh3D" type="CSGMesh3D" parent="."]
+[node name="CSGMesh3D1" type="CSGMesh3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
 mesh = SubResource("CapsuleMesh_3y4jd")
 
 [node name="Camera3D" type="Camera3D" parent="."]

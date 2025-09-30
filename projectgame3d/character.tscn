@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://doh0w0if3r85g"]
+[gd_scene load_steps=5 format=3 uid="uid://doh0w0if3r85g"]
 
 [ext_resource type="Script" uid="uid://c0lwvfs2cg8bq" path="res://character_new.gd" id="1_7egtf"]
+[ext_resource type="PackedScene" uid="uid://cddk6u341gjwm" path="res://weapons/Assault Rifle.glb" id="2_pjt0s"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8wiiv"]
 
@@ -21,3 +22,6 @@ mesh = SubResource("CapsuleMesh_3y4jd")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Root Scene" parent="." instance=ExtResource("2_pjt0s")]
+transform = Transform3D(-2.18557e-08, 0, 0.5, 0, 0.5, 0, -0.5, 0, -2.18557e-08, 0.284783, 0.718433, -1.14475)

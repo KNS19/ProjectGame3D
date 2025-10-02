@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://ga4brol6kes6"]
+[gd_scene load_steps=20 format=3 uid="uid://ga4brol6kes6"]
 
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
 [ext_resource type="PackedScene" uid="uid://doh0w0if3r85g" path="res://character.tscn" id="2_7bd7c"]
@@ -89,6 +89,9 @@ size = Vector3(2.5, 0.5, 3)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_rxeai"]
 size = Vector3(3, 0.5, 3)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tlwt5"]
+bg_color = Color(0.144022, 0.648083, 0.875533, 1)
 
 [node name="World" type="Node3D"]
 
@@ -287,3 +290,12 @@ transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 7.74062,
 alpha_cut = 2
 text = "Finish"
 font_size = 64
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="StaminaBar" type="ProgressBar" parent="UI"]
+offset_left = 23.0
+offset_top = 551.0
+offset_right = 254.0
+offset_bottom = 578.0
+theme_override_styles/background = SubResource("StyleBoxFlat_tlwt5")

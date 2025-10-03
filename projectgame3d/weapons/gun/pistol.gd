@@ -2,7 +2,7 @@
 extends Node3D
 
 # --- Config ---
-@export var fire_rate: float = 6.0        # นัดต่อวินาที (6 = ยิงได้ทุก ~0.166s)
+@export var fire_rate: float = 0.1   # นัดต่อวินาที (6 = ยิงได้ทุก ~0.166s)
 @export var damage: int = 10
 @export var max_distance: float = 120.0   # ระยะยิง (สำหรับ RayCast3D)
 @export var recoil_deg: float = 1.2       # ดีดกล้องเล็กน้อย (ถ้าไม่ได้โยง camera จะไม่ทำอะไร)

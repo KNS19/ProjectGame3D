@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://cbo1mapoekyyo"]
+
+[ext_resource type="PackedScene" uid="uid://dgf5rv7i28278" path="res://weapons/Pistol.glb" id="1_bg532"]
+[ext_resource type="Script" uid="uid://cndkl22ctiw1d" path="res://weapons/gun/pistol.gd" id="2_vs7sk"]
+
+[node name="Pistol" instance=ExtResource("1_bg532")]
+script = ExtResource("2_vs7sk")

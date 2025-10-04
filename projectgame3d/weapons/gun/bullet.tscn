@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://cttnjam02t3fb"]
+
+[ext_resource type="PackedScene" uid="uid://cxuxdlkvue22n" path="res://weapons/9x19mm.glb" id="1_unkkv"]
+[ext_resource type="Script" uid="uid://dxws3nh8dgdl8" path="res://weapons/gun/bullet.gd" id="2_nrtfo"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_oeeng"]
+
+[node name="bullet" instance=ExtResource("1_unkkv")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+script = ExtResource("2_nrtfo")
+
+[node name="Area3D" type="Area3D" parent="." index="0"]
+transform = Transform3D(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16, 0, 0.166232, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
+shape = SubResource("CylinderShape3D_oeeng")

@@ -98,6 +98,7 @@ func _unhandled_key_input(_event):
 	# Toggle ปืนด้วยเลข 1
 	if Input.is_action_just_pressed("equip_1"):
 		_toggle_gun()
+		anim_player.play("CharacterArmature|Idle_Gun")
 
 func _physics_process(_delta):
 	var current_time = Time.get_ticks_msec() / 1000.0

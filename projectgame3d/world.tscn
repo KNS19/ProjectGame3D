@@ -1,7 +1,8 @@
-[gd_scene load_steps=20 format=3 uid="uid://ga4brol6kes6"]
+[gd_scene load_steps=21 format=3 uid="uid://ga4brol6kes6"]
 
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
 [ext_resource type="PackedScene" uid="uid://doh0w0if3r85g" path="res://character.tscn" id="2_7bd7c"]
+[ext_resource type="PackedScene" uid="uid://jyo3eu0d12ca" path="res://Character/Zombie.tscn" id="3_tlwt5"]
 
 [sub_resource type="Environment" id="Environment_g3bud"]
 background_mode = 1
@@ -312,3 +313,6 @@ offset_top = 551.0
 offset_right = 254.0
 offset_bottom = 578.0
 theme_override_styles/background = SubResource("StyleBoxFlat_tlwt5")
+
+[node name="Zombie_w" parent="." instance=ExtResource("3_tlwt5")]
+transform = Transform3D(-0.0663013, 0, -0.394467, 0, 0.4, 0, 0.394467, 0, -0.0663013, 18.5286, 1.0336, -8.48825)

@@ -1,12 +1,12 @@
 extends CharacterBody3D
 
 # --- Constants ---
-const SPEED = 5.0
-const RUN_SPEED = 9.0
+const SPEED = 4.0
+const RUN_SPEED = 6.0
 const JUMP_VELOCITY = 4.5
 const FRICTION = 25
 const HORIZONTAL_ACCELERATION = 30
-const ROLL_SPEED = 12.0
+const ROLL_SPEED = 7.0
 const ROLL_DURATION = 1.333
 
 # --- Stamina ---
@@ -41,8 +41,8 @@ var default_fov = 70.0
 @onready var camera: Camera3D = $Camera3D
 @onready var anim_player: AnimationPlayer = $CSGMesh3D/AnimationPlayer
 @onready var stamina_bar: ProgressBar = get_node("/root/World/UI/StaminaBar")
-@onready var weapon_slot: Node3D = %WeaponSlot
-@onready var pistol: Node3D = %Pistol
+@onready var weapon_slot = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot
+@onready var pistol = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot/Pistol
 
 # --- Animations ---
 @export var ANIM_IDLE = "CharacterArmature|Idle"
@@ -194,10 +194,17 @@ func _play_shoot_stand() -> void:
 # --- Gun helpers ---
 func _toggle_gun():
 	has_gun = not has_gun
-	if is_instance_valid(pistol):
-		pistol.visible = has_gun
-	if not has_gun and camera:
-		camera.fov = default_fov
+	
+	# ซ่อนอาวุธทุกชิ้นใน WeaponSlot ก่อน
+	_hide_all_weapons_in_slot()
+	
+	# ถ้า toggle เป็น true → โชว์ pistol
+	if has_gun and is_instance_valid(pistol):
+		pistol.visible = true
+	else:
+		# toggle เป็น false → reset fov กลับมา
+		if camera:
+			camera.fov = default_fov
 
 func _shoot_gun():
 	if not has_gun:

@@ -1,6 +1,6 @@
 [gd_scene load_steps=46 format=4 uid="uid://bgxqu6dnybtbf"]
 
-[ext_resource type="PackedScene" uid="uid://cbo1mapoekyyo" path="res://weapons/gun/pistol.tscn" id="1_8hyib"]
+[ext_resource type="PackedScene" uid="uid://cbo1mapoekyyo" path="res://weapons/gun/pistol.tscn" id="1_x8j36"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lagm5"]
 resource_name = "Black"
@@ -11317,7 +11317,7 @@ _data = {
 &"RESET": SubResource("Animation_kovnw")
 }
 
-[node name="Root Scene" type="Node3D"]
+[node name="CSGMesh3D" type="Node3D"]
 
 [node name="RootNode" type="Node3D" parent="."]
 
@@ -11904,7 +11904,8 @@ transform = Transform3D(-0.329743, -0.00254283, -0.944067, 0.8943, -0.321244, -0
 bone_name = "Wrist.R"
 bone_idx = 40
 
-[node name="Pistol" parent="RootNode/CharacterArmature/Skeleton3D/WeaponSlot" instance=ExtResource("1_8hyib")]
+[node name="Pistol" parent="RootNode/CharacterArmature/Skeleton3D/WeaponSlot" instance=ExtResource("1_x8j36")]
+unique_name_in_owner = true
 transform = Transform3D(-5.82077e-11, -0.00159973, -5.82077e-11, 0.00159443, 5.82077e-11, 0, -7.27596e-12, 5.82077e-11, 0.00175525, -1.66636e-05, 0.00134889, -0.000299198)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]

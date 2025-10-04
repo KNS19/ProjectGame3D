@@ -1,14 +1,14 @@
 [gd_scene load_steps=5 format=3 uid="uid://doh0w0if3r85g"]
 
 [ext_resource type="Script" uid="uid://bkgt1c026ks6g" path="res://character.gd" id="1_pjt0s"]
-[ext_resource type="PackedScene" uid="uid://bgxqu6dnybtbf" path="res://Character/Adventurer.tscn" id="2_wa5vi"]
+[ext_resource type="PackedScene" uid="uid://bgxqu6dnybtbf" path="res://Character/CSGMesh3D.tscn" id="2_wa5vi"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8wiiv"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_pjt0s"]
 radius = 0.0970427
 
-[node name="character" type="CharacterBody3D"]
+[node name="character" type="CharacterBody3D" groups=["player"]]
 transform = Transform3D(1, 5.10828e-05, 0.000337133, -5.10426e-05, 1, -0.000134425, -0.000337139, 0.00013441, 1, 0, 0, 0)
 collision_layer = 2
 collision_mask = 3

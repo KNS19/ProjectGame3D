@@ -29,5 +29,5 @@ func _on_body_entered(body: Node):
 	_already_hit.append(body)
 
 	if body.has_method("take_damage"):
-		body.take_damage(damage)
+		body.take_damage(damage, "Body") 
 		print("Hit", body.name, "for", damage)

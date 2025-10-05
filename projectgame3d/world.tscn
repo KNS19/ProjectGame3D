@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://ga4brol6kes6"]
+[gd_scene load_steps=22 format=3 uid="uid://ga4brol6kes6"]
 
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
 [ext_resource type="PackedScene" uid="uid://doh0w0if3r85g" path="res://character.tscn" id="2_7bd7c"]
@@ -106,6 +106,9 @@ size = Vector3(3, 0.5, 3)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tlwt5"]
 bg_color = Color(0.144022, 0.648083, 0.875533, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aqk2v"]
+bg_color = Color(0.964706, 0.6, 0.6, 1)
 
 [node name="World" type="Node3D"]
 
@@ -313,6 +316,13 @@ offset_top = 843.0
 offset_right = 254.0
 offset_bottom = 870.0
 theme_override_styles/background = SubResource("StyleBoxFlat_tlwt5")
+
+[node name="HealthBar" type="ProgressBar" parent="UI"]
+offset_left = 29.0
+offset_top = 805.0
+offset_right = 254.0
+offset_bottom = 832.0
+theme_override_styles/background = SubResource("StyleBoxFlat_aqk2v")
 
 [node name="Zombie_w" parent="." instance=ExtResource("3_tlwt5")]
 transform = Transform3D(-0.0663013, 0, -0.394467, 0, 0.4, 0, 0.394467, 0, -0.0663013, 18.5286, 1.0336, -8.48825)

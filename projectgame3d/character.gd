@@ -133,15 +133,37 @@ func _unhandled_key_input(_event):
 		_toggle_gun()
 		anim_player.play(ANIM_IDLE_GUN) # ใช้ ANIM_IDLE_GUN แทน hardcode
 
-func _physics_process(_delta):
-	if is_dead:
-		velocity = Vector3.ZERO
-		move_and_slide()
-		return # <<< หยุดทุกอย่างทันทีเมื่อตาย
+func _do_attack(current_time: float) -> void:
+	is_attacking = true
+	stamina -= attack_cost
 
+	# ถ้าช่วงห่างจากการต่อยครั้งก่อนเกิน combo_window → รีเซ็ตคอมโบ
+	if current_time - last_attack_time > combo_window:
+		attack_index = 0
+
+	# เลือกอนิเมชันคอมโบ (หมัดซ้าย → หมัดขวา → เตะซ้าย → เตะขวา)
+	var attack_anims = [
+		"CharacterArmature|Punch_Left",
+		"CharacterArmature|Punch_Right",
+		"CharacterArmature|Kick_Left",
+		"CharacterArmature|Kick_Right"
+	]
+
+	if anim_player and attack_index < attack_anims.size() and anim_player.has_animation(attack_anims[attack_index]):
+		anim_player.play(attack_anims[attack_index])
+
+	# หมุนคอมโบไปเรื่อย ๆ
+	attack_index = (attack_index + 1) % attack_anims.size()
+	last_attack_time = current_time
+
+	# รอ cooldown ก่อนจะต่อยได้อีก
+	await get_tree().create_timer(attack_cooldown).timeout
+	is_attacking = false
+
+func _physics_process(_delta):
 	var current_time = Time.get_ticks_msec() / 1000.0
 
-	# Stamina regen
+	# Stamina
 	if not Input.is_action_pressed("run") and not is_rolling and not is_attacking:
 		stamina = min(max_stamina, stamina + stamina_recovery * _delta)
 
@@ -156,14 +178,13 @@ func _physics_process(_delta):
 	# Movement
 	var input_vec = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var cur_speed = SPEED
-	if move_locked:
-		input_vec = Vector2.ZERO
-		cur_speed = 0.0
 
+	# Run
 	if Input.is_action_pressed("run") and stamina > 0.0 and input_vec.length() > 0.1 and not is_attacking:
 		cur_speed = RUN_SPEED
 		stamina = max(0, stamina - run_cost * _delta)
 
+	# Roll
 	if Input.is_action_just_pressed("roll") and not is_rolling and not is_attacking and stamina >= roll_cost and input_vec.length() > 0.1:
 		is_rolling = true
 		roll_timer = ROLL_DURATION
@@ -171,6 +192,7 @@ func _physics_process(_delta):
 		anim_player.play(ANIM_ROLL)
 
 	var direction = (transform.basis * Vector3(input_vec.x, 0, input_vec.y)).normalized()
+
 	if is_rolling:
 		roll_timer -= _delta
 		velocity.x = direction.x * ROLL_SPEED
@@ -181,33 +203,40 @@ func _physics_process(_delta):
 		velocity.x = move_toward(velocity.x, direction.x * cur_speed, HORIZONTAL_ACCELERATION * _delta)
 		velocity.z = move_toward(velocity.z, direction.z * cur_speed, HORIZONTAL_ACCELERATION * _delta)
 
-	# Sword
+	# Sword controls
 	if has_sword and not has_gun:
 		if Input.is_action_just_pressed("fire") and not is_attacking and not is_rolling:
 			if stamina >= attack_cost:
+				print("[DEBUG] sword slash")
 				stamina -= attack_cost
 				is_attacking = true
 				_slash_sword()
-				if sword and sword.has_method("swing"):
+				if is_instance_valid(sword) and sword.has_method("swing"):
 					sword.swing()
-				# เนื่องจาก _slash_sword มี await แล้ว เราจึงลบ await ตรงนี้ออก
-				# await get_tree().create_timer(attack_cooldown).timeout 
-				# is_attacking = false # และย้ายไปอยู่ใน _slash_sword เพื่อให้ทำงานถูกต้อง
+				await get_tree().create_timer(attack_cooldown).timeout
+				is_attacking = false
 
-	# Gun
-	elif has_gun:
+	# Gun controls
+	if has_gun and not has_sword:
 		is_aiming = Input.is_action_pressed("aim")
 		if camera:
 			camera.fov = lerp(camera.fov, aim_fov if is_aiming else default_fov, 10.0 * _delta)
-		if Input.is_action_just_pressed("fire"):
+		if Input.is_action_just_pressed("fire") and not is_attacking and not is_rolling:
+			print("[DEBUG] fire pressed")
 			_shoot_gun()
 
+	# ✅ Punch controls (ต่อยได้ทุกกรณี)
+	if Input.is_action_just_pressed("attack") and not is_attacking and not is_rolling:
+		if stamina >= attack_cost and (current_time - last_attack_time >= attack_cooldown):
+			print("[DEBUG] punch attack")
+			_do_attack(current_time)
+
+
+			
 	move_and_slide()
 	force_update_transform()
 	_update_animation(input_vec)
 	stamina_bar.value = stamina
-	if is_instance_valid(health_bar): health_bar.value = health
-
 # -----------------------------------------------
 # HEALTH SYSTEM
 # -----------------------------------------------
@@ -274,15 +303,18 @@ func _on_body_entered(body: Node3D) -> void:
 # -----------------------------------------------
 func _toggle_sword():
 	has_sword = not has_sword
-	if has_sword: has_gun = false
+	if has_sword:
+		has_gun = false   # ปิดปืนเมื่อถือดาบ
 	_hide_all_weapons_in_slot()
-	if has_sword and sword: sword.visible = true
+	if has_sword and is_instance_valid(sword):
+		sword.visible = true
 
 func _toggle_gun():
 	has_gun = not has_gun
-	if has_gun: has_sword = false
+	if has_gun:
+		has_sword = false   # ปิดดาบเมื่อถือปืน
 	_hide_all_weapons_in_slot()
-	if has_gun and pistol:
+	if has_gun and is_instance_valid(pistol):
 		pistol.visible = true
 	else:
 		if camera:
@@ -307,13 +339,45 @@ func _slash_sword():
 	is_attacking = false # <<< รีเซ็ตสถานะโจมตีที่นี่
 
 func _shoot_gun():
-	if not has_gun: return
-	if is_shooting: return
+	if not has_gun: 
+		return
+	if is_shooting: 
+		return
+
 	is_shooting = true
+
+	# ตรวจว่ากำลังเคลื่อนที่หรือไม่
+	var moving_now := Input.get_vector("move_left","move_right","move_forward","move_backward").length() > 0.1
+
+	# 🔸 เลือกแอนิเมชันยิงตามสถานะการเคลื่อนที่
+	if anim_player:
+		if moving_now and anim_player.has_animation(ANIM_RUN_SHOOT):
+			anim_player.play(ANIM_RUN_SHOOT)  # เดิน/วิ่งอยู่
+		elif anim_player.has_animation(ANIM_SHOOT_GUN):
+			anim_player.play(ANIM_SHOOT_GUN)  # ยืนนิ่งยิง
+		elif anim_player.has_animation(ANIM_SHOOT_ALT):
+			anim_player.play(ANIM_SHOOT_ALT)  # fallback
+
+	# 🔫 ยิงกระสุนจริง
 	if pistol and pistol.has_method("try_fire"):
 		pistol.try_fire()
+
+	# รอเวลาคืน cooldown
 	await get_tree().create_timer(shoot_recover_time).timeout
+
+	# 🔄 หลังยิง: กลับไปอนิเมชัน idle / เดิน / วิ่ง
+	var move_vec := Input.get_vector("move_left","move_right","move_forward","move_backward")
+	var moving_after := move_vec.length() > 0.1
+	var running_after = Input.is_action_pressed("run") and stamina > 0
+
+	if anim_player:
+		if moving_after:
+			anim_player.play(ANIM_RUN if running_after else ANIM_WALK)
+		else:
+			anim_player.play(ANIM_IDLE_GUN)
+
 	is_shooting = false
+
 
 func _update_animation(input_vec: Vector2):
 	if is_attacking or is_rolling or is_shooting or not is_on_floor():
@@ -331,3 +395,7 @@ func _update_animation(input_vec: Vector2):
 			anim_player.play(ANIM_RUN if running else (ANIM_WALK if moving else ANIM_IDLE_GUN))
 	else:
 		anim_player.play(ANIM_RUN if running else (ANIM_WALK if moving else ANIM_IDLE))
+
+# -----------------------------------------------
+# MELEE ATTACK (ต่อย / เตะ)
+# -----------------------------------------------

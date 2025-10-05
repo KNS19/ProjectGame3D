@@ -309,9 +309,9 @@ font_size = 64
 
 [node name="StaminaBar" type="ProgressBar" parent="UI"]
 offset_left = 23.0
-offset_top = 551.0
+offset_top = 843.0
 offset_right = 254.0
-offset_bottom = 578.0
+offset_bottom = 870.0
 theme_override_styles/background = SubResource("StyleBoxFlat_tlwt5")
 
 [node name="Zombie_w" parent="." instance=ExtResource("3_tlwt5")]

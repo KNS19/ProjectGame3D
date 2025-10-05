@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://dfqa1du43osmd"]
+
+[ext_resource type="PackedScene" uid="uid://6clq24v311sr" path="res://weapons/Katana.glb" id="1_h8s4l"]
+[ext_resource type="Script" uid="uid://dt4nu81gh4lo7" path="res://weapons/sword/katana.gd" id="2_kvkm5"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_h8s4l"]
+
+[node name="Katana" instance=ExtResource("1_h8s4l")]
+script = ExtResource("2_kvkm5")
+
+[node name="Area3D" type="Area3D" parent="." index="1"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 5.74598, 0.180964, 0, -1.04153, 0.998358, 0.0108032, 5.57306, 0.581409)
+shape = SubResource("SphereShape3D_h8s4l")

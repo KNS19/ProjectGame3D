@@ -37,12 +37,19 @@ var default_fov = 70.0
 @export var aim_fov = 55.0
 @export var shoot_recover_time: float = 0.4
 
+#--- Sword states ---
+var has_sword = false
+var is_swing = false
+@export var lock_move_during_sword: bool = true
+var move_locked: bool = false
+
 # --- Nodes ---
 @onready var camera: Camera3D = $Camera3D
 @onready var anim_player: AnimationPlayer = $CSGMesh3D/AnimationPlayer
 @onready var stamina_bar: ProgressBar = get_node("/root/World/UI/StaminaBar")
 @onready var weapon_slot = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot
 @onready var pistol = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot/Pistol
+@onready var sword = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot/Katana
 
 # --- Animations ---
 @export var ANIM_IDLE = "CharacterArmature|Idle"
@@ -57,6 +64,9 @@ var default_fov = 70.0
 @export var ANIM_RUN_SHOOT  = "CharacterArmature|Run_Shoot"
 @export var ANIM_SHOOT_ALT  = "CharacterArmature|Gun_Shoot"
 
+@export var ANIM_IDLE_SWORD  = "CharacterArmature|Idle_Sword"
+@export var ANIM_SLASH_SWORD  = "CharacterArmature|Sword_Slash"
+
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	stamina_bar.max_value = max_stamina
@@ -66,8 +76,14 @@ func _ready():
 	if camera: default_fov = camera.fov
 
 	_hide_all_weapons_in_slot()
+	# ซ่อนปืนไว้ก่อน
 	if is_instance_valid(pistol):
 		pistol.visible = false
+	
+	# ซ่อนดาบไว้ก่อน
+	if is_instance_valid(sword):
+		sword.visible = false
+
 
 	if anim_player and anim_player.has_animation(ANIM_IDLE):
 		anim_player.play(ANIM_IDLE)
@@ -94,9 +110,14 @@ func _unhandled_input(event):
 func _unhandled_key_input(_event):
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.mouse_mode = (Input.MOUSE_MODE_VISIBLE if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED else Input.MOUSE_MODE_CAPTURED)
-
-	# Toggle ปืนด้วยเลข 1
+	
+	# Toggle ดาบด้วยเลข 1
 	if Input.is_action_just_pressed("equip_1"):
+		_toggle_sword()
+		anim_player.play("CharacterArmature|Idle_Sword")
+
+	# Toggle ปืนด้วยเลข 2
+	if Input.is_action_just_pressed("equip_2"):
 		_toggle_gun()
 		anim_player.play("CharacterArmature|Idle_Gun")
 
@@ -118,7 +139,11 @@ func _physics_process(_delta):
 	# Movement
 	var input_vec = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var cur_speed = SPEED
-
+	# 🔒 ถ้าล็อกการเดิน (ช่วงฟันดาบ) บังคับหยุดเคลื่อนที่
+	if move_locked:
+		input_vec = Vector2.ZERO
+		cur_speed = 0.0
+		
 	# Run
 	if Input.is_action_pressed("run") and stamina > 0.0 and input_vec.length() > 0.1 and not is_attacking:
 		cur_speed = RUN_SPEED
@@ -143,20 +168,44 @@ func _physics_process(_delta):
 		velocity.x = move_toward(velocity.x, direction.x * cur_speed, HORIZONTAL_ACCELERATION * _delta)
 		velocity.z = move_toward(velocity.z, direction.z * cur_speed, HORIZONTAL_ACCELERATION * _delta)
 
-	# Attack (มือเปล่า)
-	if not has_gun and Input.is_action_just_pressed("attack") and not is_rolling:
-		if stamina >= attack_cost and (current_time - last_attack_time >= attack_cooldown):
-			_do_attack(current_time)
+	# Sword controls
+	if has_sword and not has_gun:
+		if Input.is_action_just_pressed("fire") and not is_attacking and not is_rolling:
+			if stamina >= attack_cost:
+				print("[DEBUG] sword slash")
+				stamina -= attack_cost
+				is_attacking = true
+				_slash_sword()  # เล่นแอนิเมชันดาบ
+				if is_instance_valid(sword) and sword.has_method("swing"):
+					sword.swing()  # เปิด hitbox ฟันจริง
+				await get_tree().create_timer(attack_cooldown).timeout
+				is_attacking = false
+				
+	## Sword controls
+	#if has_sword and not has_gun:
+		#if Input.is_action_just_pressed("fire") and not is_attacking and not is_rolling:
+			#if stamina >= attack_cost:
+				#stamina -= attack_cost
+				#is_attacking = true
+				#await _slash_sword()   # <- ให้ _slash_sword() เป็น async (ตามด้านบน)
+				#is_attacking = false
 
 	# Gun controls
-	if has_gun:
+	elif has_gun:
 		is_aiming = Input.is_action_pressed("aim")
 		if camera:
 			camera.fov = lerp(camera.fov, aim_fov if is_aiming else default_fov, 10.0 * _delta)
-		if Input.is_action_just_pressed("fire"):
+		if Input.is_action_just_pressed("fire") and not is_attacking and not is_rolling:
 			print("[DEBUG] fire pressed")
 			_shoot_gun()
-
+			
+	# Attack (มือเปล่า)
+	#if not has_gun and Input.is_action_just_pressed("attack") and not is_rolling:
+	if Input.is_action_just_pressed("attack") and not is_attacking and not is_rolling:
+		if stamina >= attack_cost and (current_time - last_attack_time >= attack_cooldown):
+			print("[DEBUG] punch attack")
+			_do_attack(current_time)
+			
 	move_and_slide()
 	force_update_transform()
 	_update_animation(input_vec)
@@ -192,13 +241,24 @@ func _play_shoot_stand() -> void:
 	else:
 		push_warning("No shoot animation found (Idle_Gun_Shoot / Gun_Shoot)")
 
+# --- Sword helpers ---
+func _toggle_sword():
+	has_sword = not has_sword
+	if has_sword:
+		has_gun = false # ปิดปืนเมื่อถือดาบ
+	# ซ่อนอาวุธทุกชิ้นใน WeaponSlot ก่อน
+	_hide_all_weapons_in_slot()
+	# ถ้า toggle เป็น true → โชว์ pistol
+	if has_sword and is_instance_valid(sword):
+		sword.visible = true
+
 # --- Gun helpers ---
 func _toggle_gun():
 	has_gun = not has_gun
-	
+	if has_gun:
+		has_sword = false   # ปิดดาบเมื่อถือปืน
 	# ซ่อนอาวุธทุกชิ้นใน WeaponSlot ก่อน
 	_hide_all_weapons_in_slot()
-	
 	# ถ้า toggle เป็น true → โชว์ pistol
 	if has_gun and is_instance_valid(pistol):
 		pistol.visible = true
@@ -207,9 +267,30 @@ func _toggle_gun():
 		if camera:
 			camera.fov = default_fov
 
+func _slash_sword():
+	if not has_sword or is_swing:
+		return
+	is_swing = true
+
+	if anim_player and anim_player.has_animation(ANIM_SLASH_SWORD):
+		anim_player.play(ANIM_SLASH_SWORD)
+	if sword and sword.has_method("swing"):
+		sword.swing()
+
+	# 🔒 ล็อกการเคลื่อนที่ระหว่างฟัน
+	if lock_move_during_sword:
+		move_locked = true
+
+	# ✅ ใช้ความยาวแอนิเมชันจริงแทนคูลดาวน์ตายตัว
+	var dur = anim_player.current_animation_length if anim_player else attack_cooldown
+	await get_tree().create_timer(dur).timeout
+
+	move_locked = false
+	is_swing = false
+
 func _shoot_gun():
 	if not has_gun:
-		push_warning("Shoot ignored: has_gun = false (กด 1 เพื่อ equip ก่อน)")
+		push_warning("Shoot ignored: has_gun = false (กด 2 เพื่อ equip ก่อน)")
 		return
 	if is_shooting:
 		return
@@ -245,8 +326,6 @@ func _shoot_gun():
 
 	is_shooting = false
 
-
-
 func _update_animation(input_vec: Vector2):
 	if is_attacking or is_rolling or is_shooting:
 		return
@@ -257,15 +336,31 @@ func _update_animation(input_vec: Vector2):
 	var moving := input_vec.length() > 0.1
 	var running = Input.is_action_pressed("run") and stamina > 0
 
-	if has_gun:
-		# ไม่ใช้อนิเมชันเล็ง/ชี้ปืนอีกต่อไป — ตอนเล็งให้แค่ซูมกล้อง
-		# ดังนั้น movement ใช้เหมือนมือเปล่าเสมอ
+	# --- ถ้าถือดาบอยู่ ---
+	if has_sword:
 		if moving:
 			anim_player.play(ANIM_RUN if running else ANIM_WALK)
 		else:
-			anim_player.play(ANIM_IDLE)
+			# ยืนนิ่ง → เล่นแอนิเมชันถือดาบเฉย ๆ
+			if anim_player.has_animation(ANIM_IDLE_SWORD):
+				anim_player.play(ANIM_IDLE_SWORD)
+			else:
+				anim_player.play(ANIM_IDLE)
+		return
+
+	# --- ถ้ามีปืนอยู่ ---
+	if has_gun:
+		if moving:
+			anim_player.play(ANIM_RUN if running else ANIM_WALK)
+		else:
+			if anim_player.has_animation(ANIM_IDLE_GUN):
+				anim_player.play(ANIM_IDLE_GUN)
+			else:
+				anim_player.play(ANIM_IDLE)
+		return
+		
 	else:
-		# มือเปล่าตามเดิม
+		# --- มือเปล่า ---
 		if moving:
 			anim_player.play(ANIM_RUN if running else ANIM_WALK)
 		else:

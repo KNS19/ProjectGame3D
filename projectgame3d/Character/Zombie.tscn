@@ -4435,11 +4435,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.543438, 2.39026, 0.754039)
 shape = SubResource("SphereShape3D_1vv8a")
 
 [node name="BoneAttachment3D_Head" type="BoneAttachment3D" parent="RootNode/Armature/Skeleton3D"]
-<<<<<<< Updated upstream
 transform = Transform3D(0.996346, 0.0383066, -0.0763351, -0.0385611, 0.999255, -0.00186229, 0.0762067, 0.00479898, 0.997081, -0.0859829, 3.4052, 0.307383)
-=======
-transform = Transform3D(0.98493, 0.149742, 0.0865403, -0.0858705, 0.857741, -0.50686, -0.150128, 0.49179, 0.857674, -0.119701, 3.42577, 3.65274)
->>>>>>> Stashed changes
 bone_name = "mixamorig_Head"
 bone_idx = 5
 

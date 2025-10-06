@@ -172,7 +172,6 @@ func _do_attack():
 	await get_tree().create_timer(attack_time * 0.5).timeout
 	is_attacking = false
 
-
 # --- ฟังก์ชันทำดาเมจ (ซอมบี้โจมตีผู้เล่น) ---
 func _deal_damage():
 	for p in players:
@@ -181,10 +180,10 @@ func _deal_damage():
 		if dist <= ATTACK_RANGE:
 			if p.has_method("take_damage"):
 				print("ZOMBIE ATTACKED:", p.name, "for", ATTACK_DAMAGE, "damage.")
-				p.take_damage(ATTACK_DAMAGE)
+				# ✅ ส่ง 2 arguments ให้ตรงกับ character.gd
+				p.take_damage(ATTACK_DAMAGE, "zombie_attack")
 			else:
 				print("Player node", p.name, "is missing 'take_damage' function.")
-
 
 # --- การอัปเดตในทุกเฟรม ---
 func _physics_process(delta):

@@ -237,7 +237,7 @@ func _physics_process(_delta):
 # -----------------------------------------------
 # HEALTH SYSTEM
 # -----------------------------------------------
-func take_damage(amount: float) -> void:
+func take_damage(amount: float, _source: Variant = null) -> void:
 	if is_dead or is_invulnerable:
 		return
 

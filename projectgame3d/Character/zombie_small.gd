@@ -3,8 +3,14 @@ extends CharacterBody3D
 # --- Constants ---
 const ATTACK_RANGE = 1.5
 const ATTACK_DAMAGE = 10.0 # <--- ค่าดาเมจโจมตีของซอมบี้
-#const PLAYER_WEAPON_DAMAGE = 100.0 # <--- ดาเมจตั้งต้นสำหรับการโจมตีจากผู้เล่น
-const ANIM_ATTACK = "Armature|Attack"
+const ANIM_ATTACK = "Punch"
+
+# --- Animations ---
+const ANIM_WALK = "Run_Arms"
+const ANIM_IDLE = "Idle"
+const ANIM_SCREAM = "Idle_Attack"
+const ANIM_DEATH = "Death"
+const ANIM_HIT_REACT = "HitReact" # <--- แอนิเมชันเมื่อโดนโจมตี (สมมติชื่อนี้)
 
 # --- Variables ---
 @export var speed: float = 5.0
@@ -13,19 +19,14 @@ var is_screaming: bool = false
 var is_attacking: bool = false
 @export var health: float = 100.0 # <--- เลือดเริ่มต้น
 var is_dead: bool = false # <--- สถานะการตาย
-
-# --- Animations ---
-const ANIM_WALK = "Armature|Walk2"
-const ANIM_IDLE = "Armature|Idle"
-const ANIM_SCREAM = "Armature|Scream"
-const ANIM_DEATH = "Armature|Die" # <--- แอนิเมชันตาย
+var is_hit_reacting: bool = false # <--- สถานะการแสดงท่าโดนโจมตี (NEW!)
 
 # --- Nodes ---
 @onready var detection_area: Area3D = $DetectionArea
 @onready var anim: AnimationPlayer = $AnimationPlayer
 # Node Path ที่คุณระบุ
-@onready var head_area: Area3D = $"RootNode/Armature/Skeleton3D/BoneAttachment3D_Head/HeadArea"
-@onready var body_area: Area3D = $"RootNode/Armature/Skeleton3D/BoneAttachment3D_Body/BodyArea"
+@onready var head_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Head/HeadArea"
+@onready var body_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Body/BodyArea"
 
 
 func _ready():
@@ -60,26 +61,25 @@ func _ready():
 
 # --- ฟังก์ชันรับสัญญาณการชนจาก Area3D อื่น (เช่น อาวุธผู้เล่น) ---
 func _on_hit_area_entered(area: Area3D, hit_part: String):
+	# ตรวจสอบว่า Area ที่ชนเข้ามาเป็นอาวุธของผู้เล่นหรือไม่
 	if area.is_in_group("player_weapon"):
-		var weapon_node = area.get_parent()
+		# 💡 การแก้ไข: ดึงค่า 'damage' มาจากโหนด Area ของอาวุธโดยตรง
+		# เราสมมติว่า Area นี้มีตัวแปร 'damage' อยู่ในโหนดแม่ของมัน
 		
-		if weapon_node:
-			var damage_amount: float = 10.0  # default damage
-			
-			# ตรวจสอบว่า weapon_node มี property 'damage'
-			if "damage" in weapon_node:
-				var val = weapon_node.damage
-				if typeof(val) in [TYPE_FLOAT, TYPE_INT]:
-					damage_amount = float(val)  # แปลงเป็น float ปลอดภัย
-				else:
-					print("❌ Weapon damage is not a number! Using default:", damage_amount)
-			else:
-				print("❌ Weapon node does not have a 'damage' property! Using default:", damage_amount)
-			
-			# เรียกฟังก์ชันรับดาเมจ
+		# พยายามเข้าถึงโหนดแม่ของ Area3D ซึ่งก็คือโหนดอาวุธ (Node3D)
+		var weapon_node = area.get_parent() 
+		
+		if weapon_node and weapon_node.has_property("damage"):
+			# ถ้ามี property 'damage' ให้ใช้ค่านี้
+			var damage_amount = weapon_node.damage 
 			take_damage(damage_amount, hit_part)
+			
 		else:
-			print("❌ Weapon node is null!")
+			# ถ้าหาค่าดาเมจไม่ได้ ค่อยกลับไปใช้ค่า Default (ถ้ายังต้องการ)
+			print("Error: Weapon does not have a 'damage' property!")
+			# ถ้ายังไม่ลบ const PLAYER_WEAPON_DAMAGE = 100.0:
+			# take_damage(PLAYER_WEAPON_DAMAGE, hit_part) 
+
 
 # --- ฟังก์ชันรับดาเมจ (Damage Receiver) ---
 func take_damage(damage: float, hit_part: String):
@@ -99,9 +99,13 @@ func take_damage(damage: float, hit_part: String):
 		health -= damage
 		print("Generic hit. Zombie took:", damage, " damage. Health remaining:", health)
 
-	# ตรวจสอบการตาย
+	# 1. ตรวจสอบการตาย
 	if health <= 0 and not is_dead:
 		_die()
+	# 2. ถ้ายังไม่ตาย ให้แสดงท่าโดนโจมตี (NEW!)
+	elif not is_dead:
+		_do_hit_react() # <--- เรียกใช้ Hit React
+
 
 # --- ฟังก์ชันจัดการการตาย ---
 func _die():
@@ -120,6 +124,37 @@ func _die():
 	# ลบตัวละครซอมบี้ออกจากฉาก
 	queue_free()
 
+# --- ฟังก์ชันแสดงท่าโดนโจมตี (NEW!) ---
+func _do_hit_react():
+	# ถ้ากำลังแสดงท่าโดนโจมตีอยู่ หรือกำลังตายอยู่ ไม่ต้องทำอะไรซ้ำ
+	if is_hit_reacting or is_dead:
+		return
+
+	# ถ้ากำลังโจมตีอยู่ ให้ยกเลิกการโจมตี (หากต้องการ)
+	if is_attacking:
+		# อาจจะต้องยกเลิกการ 'await' ใน _do_attack ด้วยการใช้ Timers แทน await
+		# แต่สำหรับตอนนี้ เราจะแค่ตั้งค่าสถานะให้จบการโจมตีไปเลย
+		is_attacking = false
+		
+	is_hit_reacting = true
+
+	if anim.has_animation(ANIM_HIT_REACT):
+		_play_animation_safe(ANIM_HIT_REACT)
+		
+		# รอให้แอนิเมชันจบ หรืออาจจะใช้ Timer ชั่วคราวถ้าแอนิเมชันสั้นมาก
+		# ถ้าใช้ await anim.animation_finished ให้แน่ใจว่าไม่มีการ play แอนิเมชันอื่นแทรก
+		# ถ้ามีแอนิเมชันอื่นถูก play แทรก (เช่น เดิน), animation_finished จะจบลง
+		
+		# วิธีที่ 1: รอจนแอนิเมชันจบ (แนะนำถ้าแอนิเมชัน Hit React สั้นมาก)
+		if is_instance_valid(anim):
+			await anim.animation_finished
+			
+		is_hit_reacting = false
+	else:
+		# ถ้าไม่มีแอนิเมชัน ให้รอช่วงเวลาสั้นๆ แล้วกลับสู่สถานะปกติทันที
+		await get_tree().create_timer(0.2).timeout
+		is_hit_reacting = false
+
 
 # --------------------------------------------------------------------------------
 ## AI และการเคลื่อนที่ (AI & Movement)
@@ -132,7 +167,7 @@ func _on_body_entered(body):
 			players.append(body)
 			print("Zombie detected player:", body.name)
 
-			if not is_screaming and not is_attacking and players.size() == 1 and anim.has_animation(ANIM_SCREAM):
+			if not is_screaming and not is_attacking and not is_hit_reacting and players.size() == 1 and anim.has_animation(ANIM_SCREAM):
 				_do_scream()
 
 
@@ -166,11 +201,17 @@ func _do_attack():
 
 	# รอครึ่งหนึ่งของแอนิเมชันก่อนทำดาเมจ
 	await get_tree().create_timer(attack_time * 0.5).timeout
-	_deal_damage()
+	
+	# ตรวจสอบสถานะอีกครั้งก่อนทำดาเมจ เผื่อโดนยิงขัดจังหวะ!
+	if is_attacking and not is_dead and not is_hit_reacting: 
+		_deal_damage()
 
 	# รอครึ่งหลังของแอนิเมชัน
 	await get_tree().create_timer(attack_time * 0.5).timeout
-	is_attacking = false
+	
+	# ตรวจสอบสถานะอีกครั้งก่อนออกจากโหมดโจมตี
+	if is_attacking:
+		is_attacking = false
 
 
 # --- ฟังก์ชันทำดาเมจ (ซอมบี้โจมตีผู้เล่น) ---
@@ -192,8 +233,8 @@ func _physics_process(delta):
 	if is_dead:
 		return
 		
-	# หยุดถ้ากำลังตะโกนหรือโจมตี
-	if is_screaming or is_attacking:
+	# หยุดถ้ากำลังตะโกน, โจมตี, หรือ **โดนโจมตี** (NEW!)
+	if is_screaming or is_attacking or is_hit_reacting:
 		velocity = Vector3.ZERO
 		move_and_slide()
 		return

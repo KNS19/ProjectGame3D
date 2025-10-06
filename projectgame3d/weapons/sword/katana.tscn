@@ -9,7 +9,7 @@
 script = ExtResource("2_kvkm5")
 
 [node name="Area3D" type="Area3D" parent="." index="1"]
-collision_layer = 4
+collision_layer = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
 transform = Transform3D(1, 0, 0, 0, 5.7994, 0.118869, 0, -0.684148, 1.00764, 0.0108032, 5.57306, 0.589296)

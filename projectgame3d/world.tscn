@@ -1,8 +1,9 @@
-[gd_scene load_steps=22 format=3 uid="uid://ga4brol6kes6"]
+[gd_scene load_steps=23 format=3 uid="uid://ga4brol6kes6"]
 
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
 [ext_resource type="PackedScene" uid="uid://doh0w0if3r85g" path="res://character.tscn" id="2_7bd7c"]
 [ext_resource type="PackedScene" uid="uid://jyo3eu0d12ca" path="res://Character/Zombie.tscn" id="3_tlwt5"]
+[ext_resource type="PackedScene" uid="uid://bqadhdhjbkdl4" path="res://Character/ZombieSmall.tscn" id="4_aqk2v"]
 
 [sub_resource type="Environment" id="Environment_g3bud"]
 background_mode = 1
@@ -324,5 +325,17 @@ offset_right = 254.0
 offset_bottom = 832.0
 theme_override_styles/background = SubResource("StyleBoxFlat_aqk2v")
 
+[node name="CenterContainer" type="CenterContainer" parent="UI"]
+offset_right = 1928.0
+offset_bottom = 980.0
+
+[node name="ColorRect" type="ColorRect" parent="UI/CenterContainer"]
+custom_minimum_size = Vector2(2, 2)
+layout_mode = 2
+color = Color(0.835718, 3.22476e-06, 7.70092e-07, 1)
+
 [node name="Zombie_w" parent="." instance=ExtResource("3_tlwt5")]
 transform = Transform3D(-0.0663013, 0, -0.394467, 0, 0.4, 0, 0.394467, 0, -0.0663013, 18.5286, 1.0336, -8.48825)
+
+[node name="ZombieSmall" parent="." instance=ExtResource("4_aqk2v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.726, 0.997736, -3.49639)

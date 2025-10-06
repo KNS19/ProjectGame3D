@@ -1,7 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://cbo1mapoekyyo"]
+[gd_scene load_steps=4 format=3 uid="uid://cbo1mapoekyyo"]
 
 [ext_resource type="PackedScene" uid="uid://dgf5rv7i28278" path="res://weapons/Pistol.glb" id="1_bg532"]
 [ext_resource type="Script" uid="uid://cndkl22ctiw1d" path="res://weapons/gun/pistol.gd" id="2_vs7sk"]
+[ext_resource type="PackedScene" uid="uid://cttnjam02t3fb" path="res://weapons/gun/bullet.tscn" id="3_v8arh"]
 
-[node name="Pistol" instance=ExtResource("1_bg532")]
+[node name="Pistol" node_paths=PackedStringArray("muzzle") instance=ExtResource("1_bg532")]
 script = ExtResource("2_vs7sk")
+muzzle = NodePath("RootNode/Marker3D")
+bullet_scene = ExtResource("3_v8arh")
+
+[node name="Marker3D" type="Marker3D" parent="RootNode" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.43522, 0.541345, 0)

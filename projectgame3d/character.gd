@@ -58,6 +58,10 @@ var move_locked: bool = false
 @onready var weapon_slot = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot
 @onready var pistol = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot/Pistol
 @onready var sword = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot/Katana
+@onready var punch_L = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Hand_L/Hand_L_Area
+@onready var punch_R = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Hand_R/Hand_R_Area
+@onready var kick_L = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Leg_L/Leg_L_Area
+@onready var kick_R = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Leg_R/Leg_R_Area
 
 # --- Animations ---
 @export var ANIM_IDLE = "CharacterArmature|Idle"
@@ -65,7 +69,7 @@ var move_locked: bool = false
 @export var ANIM_RUN = "CharacterArmature|Run"
 @export var ANIM_ROLL = "CharacterArmature|Roll"
 @export var ANIM_HIT = "CharacterArmature|HitRecieve"
-@export var ANIM_DEATH = "CharacterArmature|Death" # <<< เพิ่มแอนิเมชันตาย
+@export var ANIM_DEATH = "CharacterArmature|Death"
 
 @export var ANIM_IDLE_GUN = "CharacterArmature|Idle_Gun"
 @export var ANIM_AIM_GUN = "CharacterArmature|Idle_Gun_Pointing"
@@ -81,7 +85,6 @@ func _ready():
 	stamina_bar.max_value = max_stamina
 	stamina_bar.value = stamina
 
-	# ตั้งค่า Health Bar
 	if is_instance_valid(health_bar):
 		health_bar.max_value = max_health
 		health_bar.value = health
@@ -96,6 +99,13 @@ func _ready():
 
 	if anim_player and anim_player.has_animation(ANIM_IDLE):
 		anim_player.play(ANIM_IDLE)
+		
+	if is_instance_valid(punch_L): punch_L.add_to_group("player_weapon")
+	if is_instance_valid(punch_R): punch_R.add_to_group("player_weapon")
+	if is_instance_valid(kick_L): kick_L.add_to_group("player_weapon")
+	if is_instance_valid(kick_R): kick_R.add_to_group("player_weapon")
+
+	_disable_all_melee_hitboxes() # ปิด hitbox ตอนเริ่มเกม
 
 # -----------------------------------------------
 # INPUT & MOVEMENT
@@ -127,21 +137,19 @@ func _unhandled_key_input(_event):
 
 	if Input.is_action_just_pressed("equip_1"):
 		_toggle_sword()
-		anim_player.play(ANIM_IDLE_SWORD) # ใช้ ANIM_IDLE_SWORD แทน hardcode
+		anim_player.play(ANIM_IDLE_SWORD)
 
 	if Input.is_action_just_pressed("equip_2"):
 		_toggle_gun()
-		anim_player.play(ANIM_IDLE_GUN) # ใช้ ANIM_IDLE_GUN แทน hardcode
+		anim_player.play(ANIM_IDLE_GUN)
 
 func _do_attack(current_time: float) -> void:
 	is_attacking = true
 	stamina -= attack_cost
 
-	# ถ้าช่วงห่างจากการต่อยครั้งก่อนเกิน combo_window → รีเซ็ตคอมโบ
 	if current_time - last_attack_time > combo_window:
 		attack_index = 0
 
-	# เลือกอนิเมชันคอมโบ (หมัดซ้าย → หมัดขวา → เตะซ้าย → เตะขวา)
 	var attack_anims = [
 		"CharacterArmature|Punch_Left",
 		"CharacterArmature|Punch_Right",
@@ -151,40 +159,33 @@ func _do_attack(current_time: float) -> void:
 
 	if anim_player and attack_index < attack_anims.size() and anim_player.has_animation(attack_anims[attack_index]):
 		anim_player.play(attack_anims[attack_index])
+		_apply_melee_damage(attack_anims[attack_index]) # ✅ เพิ่มการทำดาเมจต่อย/เตะ
 
-	# หมุนคอมโบไปเรื่อย ๆ
 	attack_index = (attack_index + 1) % attack_anims.size()
 	last_attack_time = current_time
 
-	# รอ cooldown ก่อนจะต่อยได้อีก
 	await get_tree().create_timer(attack_cooldown).timeout
 	is_attacking = false
 
 func _physics_process(_delta):
 	var current_time = Time.get_ticks_msec() / 1000.0
 
-	# Stamina
 	if not Input.is_action_pressed("run") and not is_rolling and not is_attacking:
 		stamina = min(max_stamina, stamina + stamina_recovery * _delta)
 
-	# Gravity
 	if not is_on_floor():
 		velocity.y -= gravity * _delta
 
-	# Jump
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		velocity.y = JUMP_VELOCITY
 
-	# Movement
 	var input_vec = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var cur_speed = SPEED
 
-	# Run
 	if Input.is_action_pressed("run") and stamina > 0.0 and input_vec.length() > 0.1 and not is_attacking:
 		cur_speed = RUN_SPEED
 		stamina = max(0, stamina - run_cost * _delta)
 
-	# Roll
 	if Input.is_action_just_pressed("roll") and not is_rolling and not is_attacking and stamina >= roll_cost and input_vec.length() > 0.1:
 		is_rolling = true
 		roll_timer = ROLL_DURATION
@@ -203,7 +204,6 @@ func _physics_process(_delta):
 		velocity.x = move_toward(velocity.x, direction.x * cur_speed, HORIZONTAL_ACCELERATION * _delta)
 		velocity.z = move_toward(velocity.z, direction.z * cur_speed, HORIZONTAL_ACCELERATION * _delta)
 
-	# Sword controls
 	if has_sword and not has_gun:
 		if Input.is_action_just_pressed("fire") and not is_attacking and not is_rolling:
 			if stamina >= attack_cost:
@@ -216,7 +216,6 @@ func _physics_process(_delta):
 				await get_tree().create_timer(attack_cooldown).timeout
 				is_attacking = false
 
-	# Gun controls
 	if has_gun and not has_sword:
 		is_aiming = Input.is_action_pressed("aim")
 		if camera:
@@ -225,18 +224,16 @@ func _physics_process(_delta):
 			print("[DEBUG] fire pressed")
 			_shoot_gun()
 
-	# ✅ Punch controls (ต่อยได้ทุกกรณี)
 	if Input.is_action_just_pressed("attack") and not is_attacking and not is_rolling:
 		if stamina >= attack_cost and (current_time - last_attack_time >= attack_cooldown):
 			print("[DEBUG] punch attack")
 			_do_attack(current_time)
 
-
-			
 	move_and_slide()
 	force_update_transform()
 	_update_animation(input_vec)
 	stamina_bar.value = stamina
+
 # -----------------------------------------------
 # HEALTH SYSTEM
 # -----------------------------------------------
@@ -252,7 +249,7 @@ func take_damage(amount: float) -> void:
 	print("Took damage: ", amount, " | HP:", health)
 
 	if health <= 0:
-		_die() # <<< เรียกฟังก์ชัน _die() เมื่อเลือดหมด
+		_die()
 	else:
 		_start_invulnerability()
 		if anim_player and anim_player.has_animation(ANIM_HIT):
@@ -269,25 +266,17 @@ func _start_invulnerability() -> void:
 	is_invulnerable = false
 
 func _die() -> void:
-	if is_dead: return # ป้องกันการเรียกซ้ำ
+	if is_dead: return
 	is_dead = true
 	print("Character is dead!")
-	
-	# หยุดการทำงานทางฟิสิกส์และการรับอินพุต
+
 	set_physics_process(false)
 	set_process(false)
-	
-	# เล่นแอนิเมชันตาย
+
 	if anim_player and anim_player.has_animation(ANIM_DEATH):
 		anim_player.play(ANIM_DEATH)
-	
-	# ให้ตัวละครล้มลงไปเลย (ถ้าต้องการ)
-	velocity = Vector3.ZERO 
-	
-	# ลบ Collision Shape/Body ออกหลังแอนิเมชันจบ (ทางเลือก)
-	# if anim_player and anim_player.has_animation(ANIM_DEATH):
-	# 	await anim_player.animation_finished
-	# 	# โค้ดสำหรับจัดการลบ/เปลี่ยนสถานะหลังตาย
+
+	velocity = Vector3.ZERO
 
 func _on_body_entered(body: Node3D) -> void:
 	if body.is_in_group("mons"):
@@ -304,7 +293,7 @@ func _on_body_entered(body: Node3D) -> void:
 func _toggle_sword():
 	has_sword = not has_sword
 	if has_sword:
-		has_gun = false   # ปิดปืนเมื่อถือดาบ
+		has_gun = false
 	_hide_all_weapons_in_slot()
 	if has_sword and is_instance_valid(sword):
 		sword.visible = true
@@ -312,7 +301,7 @@ func _toggle_sword():
 func _toggle_gun():
 	has_gun = not has_gun
 	if has_gun:
-		has_sword = false   # ปิดดาบเมื่อถือปืน
+		has_sword = false
 	_hide_all_weapons_in_slot()
 	if has_gun and is_instance_valid(pistol):
 		pistol.visible = true
@@ -330,42 +319,34 @@ func _slash_sword():
 	if lock_move_during_sword:
 		move_locked = true
 	
-	# ใช้ current_animation_length จากแอนิเมชันที่กำลังเล่นอยู่
 	var dur = anim_player.current_animation_length if anim_player and anim_player.current_animation == ANIM_SLASH_SWORD else attack_cooldown
 	
 	await get_tree().create_timer(dur).timeout
 	move_locked = false
 	is_swing = false
-	is_attacking = false # <<< รีเซ็ตสถานะโจมตีที่นี่
+	is_attacking = false
 
 func _shoot_gun():
-	if not has_gun: 
-		return
-	if is_shooting: 
-		return
+	if not has_gun: return
+	if is_shooting: return
 
 	is_shooting = true
 
-	# ตรวจว่ากำลังเคลื่อนที่หรือไม่
 	var moving_now := Input.get_vector("move_left","move_right","move_forward","move_backward").length() > 0.1
 
-	# 🔸 เลือกแอนิเมชันยิงตามสถานะการเคลื่อนที่
 	if anim_player:
 		if moving_now and anim_player.has_animation(ANIM_RUN_SHOOT):
-			anim_player.play(ANIM_RUN_SHOOT)  # เดิน/วิ่งอยู่
+			anim_player.play(ANIM_RUN_SHOOT)
 		elif anim_player.has_animation(ANIM_SHOOT_GUN):
-			anim_player.play(ANIM_SHOOT_GUN)  # ยืนนิ่งยิง
+			anim_player.play(ANIM_SHOOT_GUN)
 		elif anim_player.has_animation(ANIM_SHOOT_ALT):
-			anim_player.play(ANIM_SHOOT_ALT)  # fallback
+			anim_player.play(ANIM_SHOOT_ALT)
 
-	# 🔫 ยิงกระสุนจริง
 	if pistol and pistol.has_method("try_fire"):
 		pistol.try_fire()
 
-	# รอเวลาคืน cooldown
 	await get_tree().create_timer(shoot_recover_time).timeout
 
-	# 🔄 หลังยิง: กลับไปอนิเมชัน idle / เดิน / วิ่ง
 	var move_vec := Input.get_vector("move_left","move_right","move_forward","move_backward")
 	var moving_after := move_vec.length() > 0.1
 	var running_after = Input.is_action_pressed("run") and stamina > 0
@@ -377,7 +358,6 @@ func _shoot_gun():
 			anim_player.play(ANIM_IDLE_GUN)
 
 	is_shooting = false
-
 
 func _update_animation(input_vec: Vector2):
 	if is_attacking or is_rolling or is_shooting or not is_on_floor():
@@ -397,5 +377,53 @@ func _update_animation(input_vec: Vector2):
 		anim_player.play(ANIM_RUN if running else (ANIM_WALK if moving else ANIM_IDLE))
 
 # -----------------------------------------------
-# MELEE ATTACK (ต่อย / เตะ)
+# MELEE ATTACK DAMAGE SYSTEM (Punch/Kick)
 # -----------------------------------------------
+
+@export var melee_damage_punch: float = 100
+@export var melee_damage_kick: float = 100
+@export var hitbox_active_time: float = 0.25
+
+func _enable_hitbox(area: Area3D, dmg: float):
+	if not is_instance_valid(area):
+		return
+	area.monitoring = true
+	area.set_meta("damage", dmg)
+	await get_tree().create_timer(hitbox_active_time).timeout
+	if is_instance_valid(area):
+		area.monitoring = false
+		area.set_meta("damage", 0)
+
+func _disable_all_melee_hitboxes():
+	for a in [punch_L, punch_R, kick_L, kick_R]:
+		if is_instance_valid(a):
+			a.monitoring = false
+			a.set_meta("damage", 0)
+
+func _apply_melee_damage(attack_name: String):
+	match attack_name:
+		"CharacterArmature|Punch_Left":
+			_enable_hitbox(punch_L, melee_damage_punch)
+		"CharacterArmature|Punch_Right":
+			_enable_hitbox(punch_R, melee_damage_punch)
+		"CharacterArmature|Kick_Left":
+			_enable_hitbox(kick_L, melee_damage_kick)
+		"CharacterArmature|Kick_Right":
+			_enable_hitbox(kick_R, melee_damage_kick)
+
+# --- Signals สำหรับ hitbox ทั้ง 4 ---
+func _on_Hand_L_Area_body_entered(body):
+	_handle_melee_hit(body, punch_L)
+func _on_Hand_R_Area_body_entered(body):
+	_handle_melee_hit(body, punch_R)
+func _on_Leg_L_Area_body_entered(body):
+	_handle_melee_hit(body, kick_L)
+func _on_Leg_R_Area_body_entered(body):
+	_handle_melee_hit(body, kick_R)
+
+func _handle_melee_hit(body, area):
+	if not is_instance_valid(area): return
+	if body.is_in_group("mons") and area.has_meta("damage"):
+		var dmg = area.get_meta("damage")
+		if dmg > 0 and body.has_method("take_damage"):
+			body.take_damage(dmg)

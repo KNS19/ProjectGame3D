@@ -2,17 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://pg124vnr3b1p"
-path.s3tc="res://.godot/imported/Water Tower_Zombie_Atlas.png-4662af1d51182a7ff0a5d48e1e4d4930.s3tc.ctex"
+uid="uid://cuwlumo3gn4gu"
+path.s3tc="res://.godot/imported/Arch_Diffuse_palette_2.jpg-06f03caad9dc2c6c3cdae534409eb04f.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
+generator_parameters={
+"md5": "4f5c1a764fc9801ab8cb5731c984d383"
+}
 
 [deps]
 
-source_file="res://Building/Water Tower_Zombie_Atlas.png"
-dest_files=["res://.godot/imported/Water Tower_Zombie_Atlas.png-4662af1d51182a7ff0a5d48e1e4d4930.s3tc.ctex"]
+source_file="res://Building/Arch_Diffuse_palette_2.jpg"
+dest_files=["res://.godot/imported/Arch_Diffuse_palette_2.jpg-06f03caad9dc2c6c3cdae534409eb04f.s3tc.ctex"]
 
 [params]
 

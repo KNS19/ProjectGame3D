@@ -1,8 +1,8 @@
 extends CharacterBody3D
 
 # --- Constants ---
-const SPEED = 4.0
-const RUN_SPEED = 6.0
+const BASE_SPEED = 4.0
+const BASE_RUN_SPEED = 6.0
 const JUMP_VELOCITY = 4.5
 const FRICTION = 25
 const HORIZONTAL_ACCELERATION = 30
@@ -10,11 +10,18 @@ const ROLL_SPEED = 7.0
 const ROLL_DURATION = 1.333
 const INVULNERABILITY_DURATION = 0.5 # ระยะเวลาอมตะหลังโดนโจมตี
 
+# --- Dynamic Speed (ค่าที่เปลี่ยนได้) ---
+var SPEED = BASE_SPEED
+var RUN_SPEED = BASE_RUN_SPEED
+
 # --- Health ---
 var max_health: float = 100.0
 var health: float = max_health
 var is_dead: bool = false
 var is_invulnerable: bool = false
+var heal_amount: float = 20.0        # ฟื้นเลือดครั้งละ
+var heal_cooldown: float = 3.0       # ดีเลย์ระหว่างใช้ยา (วินาที)
+var last_heal_time: float = 0.0      # เวลาใช้ยาครั้งล่าสุด
 
 # --- Stamina ---
 var max_stamina = 150.0
@@ -50,6 +57,10 @@ var is_swing = false
 @export var lock_move_during_sword: bool = true
 var move_locked: bool = false
 
+#--- Heal states ---
+var has_medic = false
+var is_healing: bool = false
+
 # --- Nodes ---
 @onready var camera: Camera3D = $Camera3D
 @onready var anim_player: AnimationPlayer = $CSGMesh3D/AnimationPlayer
@@ -62,6 +73,8 @@ var move_locked: bool = false
 @onready var punch_R = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Hand_R/Hand_R_Area
 @onready var kick_L = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Leg_L/Leg_L_Area
 @onready var kick_R = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Leg_R/Leg_R_Area
+@onready var medic = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot/HealItem
+
 
 # --- Animations ---
 @export var ANIM_IDLE = "CharacterArmature|Idle"
@@ -96,6 +109,7 @@ func _ready():
 	_hide_all_weapons_in_slot()
 	if is_instance_valid(pistol): pistol.visible = false
 	if is_instance_valid(sword): sword.visible = false
+	if is_instance_valid(medic): medic.visible = false
 
 	if anim_player and anim_player.has_animation(ANIM_IDLE):
 		anim_player.play(ANIM_IDLE)
@@ -142,6 +156,10 @@ func _unhandled_key_input(_event):
 	if Input.is_action_just_pressed("equip_2"):
 		_toggle_gun()
 		anim_player.play(ANIM_IDLE_GUN)
+		
+	if Input.is_action_just_pressed("equip_3"):
+		_toggle_medic()
+		#anim_player.play()
 
 func _do_attack(current_time: float) -> void:
 	is_attacking = true
@@ -204,7 +222,7 @@ func _physics_process(_delta):
 		velocity.x = move_toward(velocity.x, direction.x * cur_speed, HORIZONTAL_ACCELERATION * _delta)
 		velocity.z = move_toward(velocity.z, direction.z * cur_speed, HORIZONTAL_ACCELERATION * _delta)
 
-	if has_sword and not has_gun:
+	if has_sword and not has_gun and not has_medic:
 		if Input.is_action_just_pressed("fire") and not is_attacking and not is_rolling:
 			if stamina >= attack_cost:
 				print("[DEBUG] sword slash")
@@ -216,13 +234,20 @@ func _physics_process(_delta):
 				await get_tree().create_timer(attack_cooldown).timeout
 				is_attacking = false
 
-	if has_gun and not has_sword:
+	if has_gun and not has_sword and not has_medic:
 		is_aiming = Input.is_action_pressed("aim")
 		if camera:
 			camera.fov = lerp(camera.fov, aim_fov if is_aiming else default_fov, 10.0 * _delta)
 		if Input.is_action_just_pressed("fire") and not is_attacking and not is_rolling:
 			print("[DEBUG] fire pressed")
 			_shoot_gun()
+
+	if has_medic and not has_sword and not has_gun:
+		if Input.is_action_just_pressed("fire") and not is_attacking and not is_rolling:
+			var now = Time.get_ticks_msec() / 1000.0
+			if now - last_heal_time >= heal_cooldown and health < max_health:
+				_use_heal()
+				last_heal_time = now
 
 	if Input.is_action_just_pressed("attack") and not is_attacking and not is_rolling:
 		if stamina >= attack_cost and (current_time - last_attack_time >= attack_cooldown):
@@ -288,12 +313,13 @@ func _on_body_entered(body: Node3D) -> void:
 		take_damage(dmg)
 
 # -----------------------------------------------
-# WEAPON HELPERS
+# WEAPON SLOT HELPERS
 # -----------------------------------------------
 func _toggle_sword():
 	has_sword = not has_sword
 	if has_sword:
 		has_gun = false
+		has_medic = false
 	_hide_all_weapons_in_slot()
 	if has_sword and is_instance_valid(sword):
 		sword.visible = true
@@ -302,9 +328,22 @@ func _toggle_gun():
 	has_gun = not has_gun
 	if has_gun:
 		has_sword = false
+		has_medic = false
 	_hide_all_weapons_in_slot()
 	if has_gun and is_instance_valid(pistol):
 		pistol.visible = true
+	else:
+		if camera:
+			camera.fov = default_fov
+
+func _toggle_medic():
+	has_medic = not has_medic
+	if has_medic:
+		has_sword = false
+		has_gun = false
+	_hide_all_weapons_in_slot()
+	if has_medic and is_instance_valid(medic):
+		medic.visible = true
 	else:
 		if camera:
 			camera.fov = default_fov
@@ -359,6 +398,40 @@ func _shoot_gun():
 
 	is_shooting = false
 
+func _use_heal():
+	if is_dead or is_healing: return
+	if health >= max_health: return
+
+	is_healing = true
+
+	if is_instance_valid(medic):
+		medic.visible = true
+
+	if anim_player and anim_player.has_animation("CharacterArmature|Interact"):
+		anim_player.play("CharacterArmature|Interact")
+
+	# ระหว่างดื่มยา ระหว่างใช้ยาความเร็วลดลง
+	var original_speed = SPEED
+	var original_run_speed = RUN_SPEED
+	SPEED *= 0.1
+	RUN_SPEED *= 0.1
+	is_attacking = true
+	# ✅ รอ 2 วินาที (หรือปรับตามความยาวแอนิเมชัน Heal)
+	await get_tree().create_timer(2.0).timeout
+
+	# ✅ ฟื้นเลือด
+	var old_hp = health
+	health = min(max_health, health + heal_amount)
+	if is_instance_valid(health_bar):
+		health_bar.value = health
+
+	# ✅ คืนค่าความเร็ว
+	SPEED = original_speed
+	RUN_SPEED = original_run_speed
+
+	is_attacking = false
+	is_healing = false
+	
 func _update_animation(input_vec: Vector2):
 	if is_attacking or is_rolling or is_shooting or not is_on_floor():
 		return

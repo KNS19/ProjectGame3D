@@ -12,5 +12,5 @@ script = ExtResource("2_kvkm5")
 collision_layer = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
-transform = Transform3D(1, 0, 0, 0, 5.7994, 0.118869, 0, -0.684148, 1.00764, 0.0108032, 5.57306, 0.589296)
+transform = Transform3D(1, 0, 0, 0, 7.22377, 0.133413, 0, -0.85218, 1.13093, 0.0108032, 5.18003, 0.670351)
 shape = SubResource("SphereShape3D_h8s4l")

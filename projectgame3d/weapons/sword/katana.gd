@@ -7,6 +7,7 @@ var _is_swinging: bool = false
 var _already_hit: Array = []
 
 func _ready():
+	add_to_group("player_weapon")
 	area.monitoring = false
 	area.body_entered.connect(_on_body_entered)
 
@@ -18,7 +19,7 @@ func swing():
 
 	# เปิด hitbox ชั่วคราว 0.25 วิ
 	area.monitoring = true
-	await get_tree().create_timer(0.25).timeout
+	await get_tree().create_timer(1.0).timeout
 	area.monitoring = false
 
 	_is_swinging = false

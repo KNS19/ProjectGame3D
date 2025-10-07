@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b33gpacl5rah4"
-path="res://.godot/imported/Zombie.glb-6a2e38e21428c585ac0e5b9379007d72.scn"
+uid="uid://d1mo15mcw7qv2"
+path="res://.godot/imported/Adventurer.glb-94eb9382161abfd31b2a47972b8de82b.scn"
 
 [deps]
 
-source_file="res://Character/Zombie.glb"
-dest_files=["res://.godot/imported/Zombie.glb-6a2e38e21428c585ac0e5b9379007d72.scn"]
+source_file="res://Character/Model_glb/Adventurer.glb"
+dest_files=["res://.godot/imported/Adventurer.glb-94eb9382161abfd31b2a47972b8de82b.scn"]
 
 [params]
 

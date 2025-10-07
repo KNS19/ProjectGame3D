@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b3jabsqab6nqn"
-path="res://.godot/imported/Zombie (1).glb-3c2987d80c9a0930d78d0a6dc6d820a7.scn"
+uid="uid://cwxpykgi1h3jp"
+path="res://.godot/imported/Zombie (3).glb-483cded14bd222599b4a12a230569f47.scn"
 
 [deps]
 
-source_file="res://Character/Zombie (1).glb"
-dest_files=["res://.godot/imported/Zombie (1).glb-3c2987d80c9a0930d78d0a6dc6d820a7.scn"]
+source_file="res://Character/Model_glb/Zombie (3).glb"
+dest_files=["res://.godot/imported/Zombie (3).glb-483cded14bd222599b4a12a230569f47.scn"]
 
 [params]
 

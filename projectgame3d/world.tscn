@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://ga4brol6kes6"]
+[gd_scene load_steps=28 format=3 uid="uid://ga4brol6kes6"]
 
 [ext_resource type="Texture2D" uid="uid://dchrq52ekajcy" path="res://weapons/sword/katana.png" id="1_036b0"]
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://jyo3eu0d12ca" path="res://Character/Zombie.tscn" id="3_tlwt5"]
 [ext_resource type="PackedScene" uid="uid://bqadhdhjbkdl4" path="res://Character/ZombieSmall.tscn" id="4_aqk2v"]
 [ext_resource type="Texture2D" uid="uid://rafw80j1xwe8" path="res://weapons/medic/medic.png" id="4_wse8f"]
+[ext_resource type="PackedScene" uid="uid://qwneja0cc3dx" path="res://Character/MiniBoss.tscn" id="9_ioo17"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tlwt5"]
 bg_color = Color(0.144022, 0.648083, 0.875533, 1)
@@ -144,6 +145,7 @@ theme_override_styles/background = SubResource("StyleBoxFlat_aqk2v")
 
 [node name="WeaponSlots" type="Control" parent="UI"]
 layout_mode = 3
+anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -152,6 +154,8 @@ offset_left = -180.0
 offset_top = -170.0
 offset_right = 180.0
 offset_bottom = -55.0
+grow_horizontal = 2
+grow_vertical = 0
 mouse_filter = 2
 script = ExtResource("1_gbfbk")
 
@@ -388,4 +392,7 @@ font_size = 64
 transform = Transform3D(-0.0663013, 0, -0.394467, 0, 0.4, 0, 0.394467, 0, -0.0663013, 18.5286, 1.0336, -8.48825)
 
 [node name="ZombieSmall" parent="." instance=ExtResource("4_aqk2v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.726, 0.997736, -3.49639)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.726, 5.35954, -0.474068)
+
+[node name="MiniBoss" parent="." instance=ExtResource("9_ioo17")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -12.3759, 1.0009, -7.44402)

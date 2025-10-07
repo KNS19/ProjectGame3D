@@ -45,7 +45,7 @@ var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 # --- Gun states ---
 var has_gun = false
-var is_aiming = false
+var is_aiming = false  
 var is_shooting = false
 var default_fov = 70.0
 @export var aim_fov = 55.0
@@ -162,7 +162,7 @@ func _unhandled_key_input(_event):
 		
 	if Input.is_action_just_pressed("equip_3"):
 		_toggle_medic()
-		#anim_player.play()
+		anim_player.play(ANIM_IDLE_SWORD)
 
 func _do_attack(current_time: float) -> void:
 	is_attacking = true
@@ -442,28 +442,39 @@ func _use_heal():
 	is_healing = false
 	
 func _update_animation(input_vec: Vector2):
-	if is_attacking or is_rolling or is_shooting or not is_on_floor():
+	# --- อย่า override animation ตอนกำลังโจมตี, สวิงดาบ, ยิง หรือใช้ยา ---
+	if is_attacking or is_rolling or is_shooting or is_swing or is_healing:
 		return
-		
+	
 	var moving = input_vec.length() > 0.1
 	var running = Input.is_action_pressed("run") and stamina > 0
 
+	# --- เลือก animation ตามอาวุธที่ถือ ---
 	if has_sword:
-		anim_player.play(ANIM_RUN if running else (ANIM_WALK if moving else ANIM_IDLE_SWORD))
+		if moving:
+			anim_player.play(ANIM_RUN if running else ANIM_WALK)
+		else:
+			anim_player.play(ANIM_IDLE_SWORD)
 	elif has_gun:
 		if is_aiming:
 			anim_player.play(ANIM_AIM_GUN)
+		elif moving:
+			anim_player.play(ANIM_RUN_SHOOT if running else ANIM_WALK)
 		else:
-			anim_player.play(ANIM_RUN if running else (ANIM_WALK if moving else ANIM_IDLE_GUN))
+			anim_player.play(ANIM_IDLE_GUN)
 	else:
-		anim_player.play(ANIM_RUN if running else (ANIM_WALK if moving else ANIM_IDLE))
+		# มือเปล่า หรือไม่มีอาวุธ
+		if moving:
+			anim_player.play(ANIM_RUN if running else ANIM_WALK)
+		else:
+			anim_player.play(ANIM_IDLE)
 
 # -----------------------------------------------
 # MELEE ATTACK DAMAGE SYSTEM (Punch/Kick)
 # -----------------------------------------------
 
-@export var melee_damage_punch: float = 100
-@export var melee_damage_kick: float = 100
+@export var melee_damage_punch: float = 25
+@export var melee_damage_kick: float = 25
 @export var hitbox_active_time: float = 0.25
 
 func _enable_hitbox(area: Area3D, dmg: float):
@@ -504,7 +515,13 @@ func _on_Leg_R_Area_body_entered(body):
 	_handle_melee_hit(body, kick_R)
 
 func _handle_melee_hit(body, area):
-	if not is_instance_valid(area): return
+	if not is_instance_valid(area):
+		return
+
+	# 🚫 หากถืออาวุธ (ดาบ, ปืน, หรือยา) ให้หมัด/เตะไม่มีผล
+	if has_sword or has_gun or has_medic:
+		return
+
 	if body.is_in_group("mons") and area.has_meta("damage"):
 		var dmg = area.get_meta("damage")
 		if dmg > 0 and body.has_method("take_damage"):

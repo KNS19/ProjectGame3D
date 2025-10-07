@@ -3,14 +3,18 @@
 [ext_resource type="PackedScene" uid="uid://6clq24v311sr" path="res://weapons/Katana.glb" id="1_h8s4l"]
 [ext_resource type="Script" uid="uid://dt4nu81gh4lo7" path="res://weapons/sword/katana.gd" id="2_kvkm5"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_h8s4l"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_h8s4l"]
+radius = 0.347779
+height = 5.56824
 
 [node name="Katana" instance=ExtResource("1_h8s4l")]
 script = ExtResource("2_kvkm5")
 
 [node name="Area3D" type="Area3D" parent="." index="1"]
-collision_layer = 0
+transform = Transform3D(0.999999, 0, 0, 0, 3.08468, 0.148726, 0, -0.653192, 0.702353, -0.037806, 8.54302, 0.477178)
+collision_layer = 4
+collision_mask = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
-transform = Transform3D(1, 0, 0, 0, 7.22377, 0.133413, 0, -0.85218, 1.13093, 0.0108032, 5.18003, 0.670351)
-shape = SubResource("SphereShape3D_h8s4l")
+transform = Transform3D(0.999976, -2.32831e-10, 0.00703362, 0.000174749, 0.316176, -0.0248441, -0.00976701, 0.109116, 1.38858, 0.033582, -0.967568, -0.578518)
+shape = SubResource("CapsuleShape3D_h8s4l")

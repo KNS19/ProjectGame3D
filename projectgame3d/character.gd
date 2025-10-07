@@ -66,6 +66,7 @@ var is_healing: bool = false
 @onready var anim_player: AnimationPlayer = $CSGMesh3D/AnimationPlayer
 @onready var stamina_bar: ProgressBar = get_node("/root/World/UI/StaminaBar")
 @onready var health_bar: ProgressBar = get_node("/root/World/UI/HealthBar")
+@onready var weapon_ui: Node = get_node_or_null("/root/World/UI/WeaponSlots")
 @onready var weapon_slot = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot
 @onready var pistol = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot/Pistol
 @onready var sword = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot/Katana
@@ -120,7 +121,9 @@ func _ready():
 	if is_instance_valid(kick_R): kick_R.add_to_group("player_weapon")
 
 	_disable_all_melee_hitboxes() # ปิด hitbox ตอนเริ่มเกม
-
+	
+	if weapon_ui and weapon_ui.has_method("update_slots"):
+		weapon_ui.update_slots(has_sword, has_gun, has_medic)
 # -----------------------------------------------
 # INPUT & MOVEMENT
 # -----------------------------------------------
@@ -323,6 +326,8 @@ func _toggle_sword():
 	_hide_all_weapons_in_slot()
 	if has_sword and is_instance_valid(sword):
 		sword.visible = true
+	if weapon_ui and weapon_ui.has_method("update_slots"):
+		weapon_ui.update_slots(has_sword, has_gun, has_medic)
 
 func _toggle_gun():
 	has_gun = not has_gun
@@ -335,6 +340,8 @@ func _toggle_gun():
 	else:
 		if camera:
 			camera.fov = default_fov
+	if weapon_ui and weapon_ui.has_method("update_slots"):
+		weapon_ui.update_slots(has_sword, has_gun, has_medic)
 
 func _toggle_medic():
 	has_medic = not has_medic
@@ -347,6 +354,8 @@ func _toggle_medic():
 	else:
 		if camera:
 			camera.fov = default_fov
+	if weapon_ui and weapon_ui.has_method("update_slots"):
+		weapon_ui.update_slots(has_sword, has_gun, has_medic)
 
 func _slash_sword():
 	if not has_sword or is_swing: return

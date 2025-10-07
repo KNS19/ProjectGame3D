@@ -1,9 +1,19 @@
-[gd_scene load_steps=23 format=3 uid="uid://ga4brol6kes6"]
+[gd_scene load_steps=27 format=3 uid="uid://ga4brol6kes6"]
 
+[ext_resource type="Texture2D" uid="uid://dchrq52ekajcy" path="res://weapons/sword/katana.png" id="1_036b0"]
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
+[ext_resource type="Script" uid="uid://cvqsyxc2bhd25" path="res://weapons/weapon_slots.gd" id="1_gbfbk"]
 [ext_resource type="PackedScene" uid="uid://doh0w0if3r85g" path="res://character.tscn" id="2_7bd7c"]
+[ext_resource type="Texture2D" uid="uid://ku6mgjo42sk3" path="res://weapons/gun/pistol.png" id="3_ioo17"]
 [ext_resource type="PackedScene" uid="uid://jyo3eu0d12ca" path="res://Character/Zombie.tscn" id="3_tlwt5"]
 [ext_resource type="PackedScene" uid="uid://bqadhdhjbkdl4" path="res://Character/ZombieSmall.tscn" id="4_aqk2v"]
+[ext_resource type="Texture2D" uid="uid://rafw80j1xwe8" path="res://weapons/medic/medic.png" id="4_wse8f"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tlwt5"]
+bg_color = Color(0.144022, 0.648083, 0.875533, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aqk2v"]
+bg_color = Color(0.964706, 0.6, 0.6, 1)
 
 [sub_resource type="Environment" id="Environment_g3bud"]
 background_mode = 1
@@ -105,13 +115,78 @@ size = Vector3(2.5, 0.5, 3)
 [sub_resource type="BoxShape3D" id="BoxShape3D_rxeai"]
 size = Vector3(3, 0.5, 3)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tlwt5"]
-bg_color = Color(0.144022, 0.648083, 0.875533, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aqk2v"]
-bg_color = Color(0.964706, 0.6, 0.6, 1)
-
 [node name="World" type="Node3D"]
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="CenterContainer" type="CenterContainer" parent="UI"]
+offset_right = 1928.0
+offset_bottom = 980.0
+
+[node name="ColorRect" type="ColorRect" parent="UI/CenterContainer"]
+custom_minimum_size = Vector2(2, 2)
+layout_mode = 2
+color = Color(0.835718, 3.22476e-06, 7.70092e-07, 1)
+
+[node name="StaminaBar" type="ProgressBar" parent="UI"]
+offset_left = 26.0
+offset_top = 850.0
+offset_right = 256.0
+offset_bottom = 880.0
+theme_override_styles/background = SubResource("StyleBoxFlat_tlwt5")
+
+[node name="HealthBar" type="ProgressBar" parent="UI"]
+offset_left = 26.0
+offset_top = 805.0
+offset_right = 256.0
+offset_bottom = 835.0
+theme_override_styles/background = SubResource("StyleBoxFlat_aqk2v")
+
+[node name="WeaponSlots" type="Control" parent="UI"]
+layout_mode = 3
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -170.0
+offset_right = 180.0
+offset_bottom = -55.0
+mouse_filter = 2
+script = ExtResource("1_gbfbk")
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/WeaponSlots"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+scale = Vector2(0.221953, 0.221953)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="UI/WeaponSlots/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="ColorRect" type="ColorRect" parent="UI/WeaponSlots/MarginContainer/HBoxContainer"]
+layout_mode = 2
+color = Color(0, 0, 0, 0.270588)
+
+[node name="Slot_Sword" type="TextureRect" parent="UI/WeaponSlots/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 6
+texture = ExtResource("1_036b0")
+stretch_mode = 5
+
+[node name="Slot_Gun" type="TextureRect" parent="UI/WeaponSlots/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 6
+texture = ExtResource("3_ioo17")
+
+[node name="Slot_Medic" type="TextureRect" parent="UI/WeaponSlots/MarginContainer/HBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 6
+texture = ExtResource("4_wse8f")
 
 [node name="character" parent="." instance=ExtResource("2_7bd7c")]
 transform = Transform3D(-1, 2.98023e-08, -8.74228e-08, 2.98023e-08, 1, 0, 8.74228e-08, 0, -1, 0, 1, 0)
@@ -308,31 +383,6 @@ transform = Transform3D(1.31134e-07, 0, -1, 0, 1, 0, 1, 0, 1.31134e-07, 7.74062,
 alpha_cut = 2
 text = "Finish"
 font_size = 64
-
-[node name="UI" type="CanvasLayer" parent="."]
-
-[node name="StaminaBar" type="ProgressBar" parent="UI"]
-offset_left = 23.0
-offset_top = 843.0
-offset_right = 254.0
-offset_bottom = 870.0
-theme_override_styles/background = SubResource("StyleBoxFlat_tlwt5")
-
-[node name="HealthBar" type="ProgressBar" parent="UI"]
-offset_left = 29.0
-offset_top = 805.0
-offset_right = 254.0
-offset_bottom = 832.0
-theme_override_styles/background = SubResource("StyleBoxFlat_aqk2v")
-
-[node name="CenterContainer" type="CenterContainer" parent="UI"]
-offset_right = 1928.0
-offset_bottom = 980.0
-
-[node name="ColorRect" type="ColorRect" parent="UI/CenterContainer"]
-custom_minimum_size = Vector2(2, 2)
-layout_mode = 2
-color = Color(0.835718, 3.22476e-06, 7.70092e-07, 1)
 
 [node name="Zombie_w" parent="." instance=ExtResource("3_tlwt5")]
 transform = Transform3D(-0.0663013, 0, -0.394467, 0, 0.4, 0, 0.394467, 0, -0.0663013, 18.5286, 1.0336, -8.48825)

@@ -19,8 +19,8 @@ const ANIM_RUN = "CharacterArmature|Run_Arms"
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var attack_Left_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/Hand_Left/Left_Area"
 @onready var attack_Right_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/Hand_Right/Right_Area"
-# 🔴 NOTE: ไม่ใช้ BodyArea ในการรับดาเมจอีกแล้ว แต่ยังคงไว้ถ้าจำเป็นสำหรับโมเดล
-@onready var body_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Body/BodyArea"
+@onready var body_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Body/BodyArea" 
+# BodyArea ยังคงอยู่ใน @onready แต่จะไม่ถูกใช้รับดาเมจอีกแล้ว
 
 # --- Boss State Machine ---
 enum State {
@@ -51,21 +51,18 @@ var attack_timer: float = 0.0
 var stun_timer: float = 0.0
 const STUN_DURATION: float = 2.0
 
-var player_target: CharacterBody3D = null # เก็บ reference ของผู้เล่น
+var player_target: CharacterBody3D = null
 
 # ==============================================================================
 # INITIALIZATION AND SETUP
 # ==============================================================================
 
 func _ready():
-	# 1. เชื่อมต่อสัญญาณของ DetectionArea (ใช้ตรวจจับ Player)
+	# 1. เชื่อมต่อสัญญาณ DetectionArea
 	detection_area.body_entered.connect(_on_detection_area_body_entered)
 	detection_area.body_exited.connect(_on_detection_area_body_exited)
 	
-	# 🔴 ลบ: ไม่เชื่อมต่อ body_area.area_entered สำหรับรับดาเมจแล้ว
-	# 🔴 ลบ: ไม่ต้องตั้งค่า body_area.monitorable อีกแล้ว
-	
-	# 2. เตรียมพื้นที่โจมตีและสัญญาณ (Boss Attack)
+	# 2. เตรียมพื้นที่โจมตีและสัญญาณ
 	attack_Left_area.monitoring = false
 	attack_Right_area.monitoring = false
 	
@@ -105,6 +102,7 @@ func _physics_process(delta: float):
 			do_hit_stun(delta)
 		State.PHASE_TRANSITION:
 			do_phase_transition(delta)
+		# State DEAD ไม่ต้องทำอะไรใน _physics_process นอกจาก set_physics_process(false)
 	
 	move_and_slide()
 	
@@ -175,10 +173,9 @@ func do_phase_transition(delta: float):
 	anim.play(ANIM_IDLE)
 	
 func do_dead(delta: float):
-	anim.play(ANIM_DEATH)
 	velocity = Vector3.ZERO
-	# ✅ แก้ไขชื่อฟังก์ชันสำหรับ Godot 4
-	set_physics_process(false)
+	# ✅ แก้ไขชื่อฟังก์ชันสำหรับ Godot 4 และสั่งให้หยุดคำนวณฟิสิกส์
+	set_physics_process(false) 
 	
 # ==============================================================================
 # STATE CHANGE FUNCTION
@@ -188,8 +185,14 @@ func set_state(new_state: State):
 	current_state = new_state
 	#print("Boss State: ", State.keys()[current_state])
 
+	# 🟢 NEW LOGIC: เล่นแอนิเมชันท่าตายทันทีเมื่อเข้าสู่สถานะ DEAD
+	if new_state == State.DEAD:
+		if anim and anim.has_animation(ANIM_DEATH):
+			anim.play(ANIM_DEATH)
+			print("🚨 Boss is dead. Playing DEATH animation.")
+
 # ==============================================================================
-# 🟢 PUBLIC METHOD: รับดาเมจโดยตรงจาก Player
+# 🟢 PUBLIC METHOD: รับดาเมจโดยตรงจาก Player (take_damage)
 # ==============================================================================
 
 func take_damage(damage_amount: float, source: Variant = null):
@@ -199,12 +202,10 @@ func take_damage(damage_amount: float, source: Variant = null):
 	health -= damage_amount
 	print("💥 BOSS HIT (Direct)! Damage: ", damage_amount, " | New HP: ", health)
 
-	# ถ้าบอสยังไม่ตาย ให้เข้าสู่สถานะชะงัก
 	if health > 0:
 		set_state(State.HIT_STUN)
 		stun_timer = STUN_DURATION
 		
-		# ตรวจสอบการเปลี่ยนเฟส
 		if current_phase == 1 and health <= max_health_phase2:
 			set_state(State.PHASE_TRANSITION)
 			
@@ -217,7 +218,6 @@ func take_damage(damage_amount: float, source: Variant = null):
 
 # --- Detection Area (ตรวจจับผู้เล่น) ---
 func _on_detection_area_body_entered(body: Node3D):
-	# ตรวจสอบผู้เล่นเพื่อเริ่ม CHASE
 	if body.is_in_group("player"):
 		player_target = body as CharacterBody3D
 		if current_state == State.IDLE:
@@ -228,8 +228,6 @@ func _on_detection_area_body_exited(body: Node3D):
 		player_target = null
 		if current_state == State.CHASE:
 			set_state(State.IDLE)
-
-# 🔴 ลบฟังก์ชัน _on_body_area_area_entered เดิมออก
 
 # --- Attack Areas (ปล่อยดาเมจใส่ผู้เล่น) ---
 
@@ -248,14 +246,12 @@ func _on_right_area_body_entered(body: Node3D):
 # --- Animation Player (ควบคุมการเปลี่ยนสถานะหลังโจมตี/เปลี่ยนเฟส) ---
 func _on_animation_finished(anim_name: StringName):
 	if current_state == State.ATTACK:
-		# ปิด Area โจมตีหลังจากแอนิเมชันจบ
 		attack_Right_area.monitoring = false
 		attack_Left_area.monitoring = false
 		
 		set_state(State.CHASE if player_target else State.IDLE)
 		
 	elif current_state == State.PHASE_TRANSITION and anim_name == ANIM_IDLE:
-		# Logic การเปลี่ยนเฟส 1 -> 2
 		current_phase = 2
 		health = max_health_phase2
 		
@@ -268,7 +264,6 @@ func _on_animation_finished(anim_name: StringName):
 # HELPER FUNCTIONS
 # ==============================================================================
 
-# ฟังก์ชันสำหรับส่งดาเมจไปยังเป้าหมาย (ใช้สำหรับโจมตี Player)
 func deal_damage(target: Node3D, amount: int):
 	if target.has_method("take_damage"):
 		target.take_damage(float(amount), self)

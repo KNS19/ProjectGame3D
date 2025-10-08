@@ -37,6 +37,7 @@ const ANIM_DEATH = "Death"
 @onready var head_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Head/HeadArea"
 @onready var body_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Body/BodyArea"
 @onready var loop_sfx: AudioStreamPlayer3D = $LoopSfx
+@onready var footstep_sfx: AudioStreamPlayer3D = $WalkSfx
 
 func _ready():
 	# ✅ ดึงผู้เล่นทั้งหมดจาก group "player" ตั้งแต่เริ่มเกม
@@ -193,6 +194,9 @@ func _physics_process(delta):
 			velocity.y -= gravity * delta
 		move_and_slide()
 		_play_animation_safe(ANIM_WALK)
+		# --- เล่นเสียงเดิน ---
+		if footstep_sfx and not footstep_sfx.playing:
+			footstep_sfx.play()
 
 # --------------------------------------------------------------------------------
 ## ระบบโจมตี (เหมือนเดิม)

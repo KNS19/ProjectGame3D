@@ -29,6 +29,7 @@ const ANIM_DEATH = "Armature|Die"
 @onready var body_area: Area3D = $"RootNode/Armature/Skeleton3D/BoneAttachment3D_Body/BodyArea"
 @export var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @onready var loop_sfx: AudioStreamPlayer3D = $LoopSfx
+@onready var footstep_sfx: AudioStreamPlayer3D = $WalkSfx
 
 func _ready():
 	# ✅ ดึงผู้เล่นทุกคนจากกลุ่ม "player" มาใส่ใน list ตั้งแต่เริ่ม
@@ -176,7 +177,10 @@ func _physics_process(delta):
 			velocity.y -= gravity * delta
 		move_and_slide()
 		_play_animation_safe(ANIM_WALK)
-
+		# --- เล่นเสียงเดิน ---
+		if not footstep_sfx.playing:
+			footstep_sfx.play()
+			
 func _do_attack():
 	is_attacking = true
 	_play_animation_safe(ANIM_ATTACK)

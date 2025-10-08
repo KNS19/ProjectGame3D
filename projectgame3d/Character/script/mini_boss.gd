@@ -21,6 +21,9 @@ var score_value: int = 300 # ปรับค่าได้ตามประเ
 @onready var attack_Right_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/Hand_Right/Right_Area"
 @onready var body_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Body/BodyArea"
 @onready var loop_sfx: AudioStreamPlayer3D = $LoopSfx 
+@onready var phase2_sfx: AudioStreamPlayer3D = $Phase2Sfx
+@onready var walk_sfx: AudioStreamPlayer3D = $WalkSfx
+@onready var run_sfx: AudioStreamPlayer3D = $RunSfx
 # BodyArea ยังคงอยู่ใน @onready แต่จะไม่ถูกใช้รับดาเมจอีกแล้ว
 
 # --- Boss State Machine ---
@@ -128,6 +131,10 @@ func _physics_process(delta: float):
 func do_idle(delta: float):
 	anim.play(ANIM_IDLE)
 	velocity = Vector3.ZERO
+	# หยุดเสียงเดิน/วิ่ง
+	if walk_sfx.playing: walk_sfx.stop()
+	if run_sfx.playing: run_sfx.stop()
+	
 	if player_target:
 		set_state(State.CHASE)
 
@@ -147,7 +154,19 @@ func do_chase(delta: float):
 	velocity.z = direction.z * current_speed
 	
 	anim.play(current_walk_anim)
-
+	
+	# 🔊 เสียงเดิน/วิ่ง
+	if current_phase == 1:
+		if not walk_sfx.playing:
+			walk_sfx.play()
+		if run_sfx.playing:
+			run_sfx.stop()
+	else:
+		if not run_sfx.playing:
+			run_sfx.play()
+		if walk_sfx.playing:
+			walk_sfx.stop()
+			
 	if global_position.distance_to(player_target.global_position) < 1.5 and attack_timer <= 0:
 		set_state(State.ATTACK)
 
@@ -162,11 +181,17 @@ func do_attack(delta: float):
 		current_attack_cooldown = attack_cooldown_phase1
 		attack_Right_area.monitoring = true
 		attack_Left_area.monitoring = false
+		# 🔊 เสียงบอสเฟส 1 
+		if not loop_sfx.playing:
+			loop_sfx.play()
 	else: # Phase 2
 		current_attack_anim = ANIM_DUBLE_ATTACK
 		current_attack_cooldown = attack_cooldown_phase2
 		attack_Right_area.monitoring = false
 		attack_Left_area.monitoring = true
+		# 🔊 เสียงบอสเฟส 2
+		if not phase2_sfx.playing:
+			phase2_sfx.play()
 
 	anim.play(current_attack_anim)
 	attack_timer = current_attack_cooldown
@@ -201,7 +226,12 @@ func set_state(new_state: State):
 		if anim and anim.has_animation(ANIM_DEATH):
 			anim.play(ANIM_DEATH)
 			print("🚨 Boss is dead. Playing DEATH animation.")
-			
+
+			# 🔇 หยุดเสียงทั้งหมด
+			for sfx in [loop_sfx, phase2_sfx, walk_sfx, run_sfx]:
+				if sfx.playing:
+					sfx.stop()
+
 			await anim.animation_finished
 			print("💀 Boss death animation finished. Removing boss.")
 			
@@ -274,6 +304,11 @@ func _on_animation_finished(anim_name: StringName):
 		set_state(State.CHASE if player_target else State.IDLE)
 		
 	elif current_state == State.PHASE_TRANSITION and anim_name == ANIM_IDLE:
+	# 🔊 หยุดเสียงเฟส 1 และเล่นเสียงเฟส 2
+		if loop_sfx.playing:
+			loop_sfx.stop()
+		if not phase2_sfx.playing:
+			phase2_sfx.play()
 		current_phase = 2
 		health = max_health_phase2
 		

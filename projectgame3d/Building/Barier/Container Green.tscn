@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=4 uid="uid://bk0j6vta50d1v"]
+[gd_scene load_steps=8 format=4 uid="uid://bk0j6vta50d1v"]
 
 [ext_resource type="Texture2D" uid="uid://daa2b233r87x1" path="res://Building/Container Green_Zombie_Atlas.png" id="1_72jc1"]
+[ext_resource type="Script" uid="uid://b6lneflmk31fl" path="res://Building/Barier/plastic_barrier.gd" id="1_yqbmb"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tyis4"]
 resource_name = "Atlas.012"
@@ -47,7 +48,14 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_ufo45")
 
-[node name="ConGreen" type="Node3D"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_yqbmb"]
+size = Vector3(5.8387, 2.66159, 2.60736)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_o4iur"]
+size = Vector3(5.43042, 2.65082, 2.42569)
+
+[node name="ConGreen" type="Node3D" groups=["player"]]
+script = ExtResource("1_yqbmb")
 
 [node name="RootNode" type="Node3D" parent="."]
 
@@ -55,3 +63,17 @@ shadow_mesh = SubResource("ArrayMesh_ufo45")
 transform = Transform3D(100, 0, 0, 0, 100, -4.37114e-06, 0, 4.37114e-06, 100, 0, 0, 0)
 mesh = SubResource("ArrayMesh_b72gy")
 skeleton = NodePath("")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_mask = 11
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00548553, 1.34178, -0.0713501)
+shape = SubResource("BoxShape3D_yqbmb")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_mask = 15
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0841064, 1.40915, -0.026535)
+shape = SubResource("BoxShape3D_o4iur")

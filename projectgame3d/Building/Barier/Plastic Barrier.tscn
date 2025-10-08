@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=4 uid="uid://iac8qj64xc0w"]
+[gd_scene load_steps=8 format=4 uid="uid://iac8qj64xc0w"]
 
 [ext_resource type="Script" uid="uid://b6lneflmk31fl" path="res://Building/Barier/plastic_barrier.gd" id="1_8eeel"]
 [ext_resource type="Texture2D" uid="uid://bimmirmvb7xxg" path="res://Building/Plastic Barrier_Zombie_Atlas.png" id="1_isihh"]
@@ -51,6 +51,9 @@ shadow_mesh = SubResource("ArrayMesh_8gdml")
 [sub_resource type="BoxShape3D" id="BoxShape3D_a0p32"]
 size = Vector3(1, 0.62677, 0.312683)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_8eeel"]
+size = Vector3(1, 0.609009, 0.294678)
+
 [node name="PlasticBarrier" type="Node3D" groups=["player"]]
 script = ExtResource("1_8eeel")
 
@@ -62,8 +65,15 @@ mesh = SubResource("ArrayMesh_pj8vh")
 skeleton = NodePath("")
 
 [node name="Area3D" type="Area3D" parent="."]
-collision_mask = 11
+collision_mask = 15
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.280115, 0.00979614)
 shape = SubResource("BoxShape3D_a0p32")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_mask = 15
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.320618, -0.0162354)
+shape = SubResource("BoxShape3D_8eeel")

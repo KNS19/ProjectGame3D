@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 [gd_scene load_steps=42 format=3 uid="uid://ga4brol6kes6"]
+=======
+[gd_scene load_steps=44 format=3 uid="uid://ga4brol6kes6"]
+>>>>>>> 4894c5538d62e198c2b03f80be1de28cdc20588a
 
 [ext_resource type="Texture2D" uid="uid://dchrq52ekajcy" path="res://weapons/sword/katana.png" id="1_036b0"]
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
@@ -15,7 +19,13 @@
 [ext_resource type="PackedScene" uid="uid://cw3ewsvgwxnr4" path="res://Building/Street Light/StreetLights.tscn" id="12_k3n1d"]
 [ext_resource type="PackedScene" uid="uid://brx03xp4mlph4" path="res://Building/Street Light/Cross walk.tscn" id="14_70uel"]
 [ext_resource type="PackedScene" uid="uid://iac8qj64xc0w" path="res://Building/Barier/Plastic Barrier.tscn" id="15_hiqwa"]
+<<<<<<< HEAD
 [ext_resource type="AudioStream" uid="uid://d1ykjlnmk4wqm" path="res://sounds/เสียงเมือง.mp3" id="16_2u3nc"]
+=======
+[ext_resource type="PackedScene" uid="uid://bk0j6vta50d1v" path="res://Building/Barier/Container Green.tscn" id="16_ikiii"]
+[ext_resource type="PackedScene" uid="uid://bgc4rl42dyqu7" path="res://Building/Barier/Container Red.tscn" id="17_cbp6q"]
+[ext_resource type="PackedScene" uid="uid://lmvb8bujwyww" path="res://Building/Barier/Broken Car.tscn" id="18_26xuy"]
+>>>>>>> 4894c5538d62e198c2b03f80be1de28cdc20588a
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tlwt5"]
 bg_color = Color(0.144022, 0.648083, 0.875533, 1)
@@ -277,6 +287,7 @@ material = SubResource("ShaderMaterial_rwhea")
 
 [node name="AnimationBody3D3" type="AnimatableBody3D" parent="."]
 transform = Transform3D(-7.23586e-16, 1, -4.37114e-08, 5.21541e-08, -4.37114e-08, -1, -1, -1.33227e-15, -5.21541e-08, 3.25, 3.75, 9.05)
+visible = false
 collision_layer = 6
 collision_mask = 7
 
@@ -303,6 +314,7 @@ script = SubResource("GDScript_fj7yv")
 
 [node name="StaticProps" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4437, -1.90735e-06, 5.53012)
+visible = false
 
 [node name="StaticBody3D" type="StaticBody3D" parent="StaticProps"]
 transform = Transform3D(-2.33351e-15, 1, -4.37114e-08, -0.422618, -3.9616e-08, -0.906308, -0.906308, 1.84732e-08, 0.422618, -8, 2.3, 7.1349)
@@ -360,6 +372,7 @@ size = Vector3(3, 2, 0.5)
 
 [node name="StaticBody3D5" type="StaticBody3D" parent="StaticProps"]
 transform = Transform3D(1, -4.37114e-08, 5.21541e-08, 5.21541e-08, -4.37114e-08, -1, 4.37114e-08, 1, -4.37114e-08, 3.25, 2.5, 2.3)
+visible = false
 collision_layer = 6
 collision_mask = 7
 
@@ -378,6 +391,7 @@ size = Vector3(2, 0.5, 0.5)
 
 [node name="StaticBody3D8" type="StaticBody3D" parent="StaticProps"]
 transform = Transform3D(1, -4.37114e-08, 5.21541e-08, 5.21541e-08, -4.37114e-08, -1, 4.37114e-08, 1, -4.37114e-08, 3.25, 2.5, 4.8)
+visible = false
 collision_layer = 6
 collision_mask = 7
 
@@ -396,6 +410,7 @@ size = Vector3(2, 0.5, 3)
 
 [node name="StaticBody3D6" type="StaticBody3D" parent="StaticProps"]
 transform = Transform3D(-8.74228e-08, -1, 4.37114e-08, 5.21541e-08, -4.37114e-08, -1, 1, -8.74228e-08, 5.21541e-08, 4.5, 2.5, 3.55)
+visible = false
 collision_layer = 6
 collision_mask = 7
 
@@ -414,6 +429,7 @@ size = Vector3(3, 0.5, 3)
 
 [node name="StaticBody3D7" type="StaticBody3D" parent="StaticProps"]
 transform = Transform3D(-8.74228e-08, -1, 4.37114e-08, 5.21541e-08, -4.37114e-08, -1, 1, -8.74228e-08, 5.21541e-08, 2, 2.5, 3.55)
+visible = false
 collision_layer = 6
 collision_mask = 7
 
@@ -440,7 +456,7 @@ font_size = 64
 transform = Transform3D(-0.0663013, 0, -0.394467, 0, 0.4, 0, 0.394467, 0, -0.0663013, 18.5286, 1.0336, -8.48825)
 
 [node name="ZombieSmall" parent="." instance=ExtResource("4_aqk2v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.9794, 7.26853, -4.89477)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0206003, 7.26853, -28.8948)
 
 [node name="MiniBoss" parent="." instance=ExtResource("9_ioo17")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -12.3759, 1.0009, -7.44402)
@@ -1221,8 +1237,24 @@ transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 shape = SubResource("WorldBoundaryShape3D_70uel")
 
 [node name="PlasticBarrier" parent="." instance=ExtResource("15_hiqwa")]
+<<<<<<< HEAD
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1, -5)
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("16_2u3nc")
 parameters/looping = true
+=======
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.22052, 1, -8)
+
+[node name="ConGreen" parent="." instance=ExtResource("16_ikiii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.20149, 1.13, -1.42161)
+
+[node name="ConRed" parent="." instance=ExtResource("17_cbp6q")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.48002, 1.13944, -1.76769)
+
+[node name="PlasticBarrier2" parent="." instance=ExtResource("15_hiqwa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1224, 1.13, -8.6384)
+
+[node name="CarBroak" parent="." instance=ExtResource("18_26xuy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.00462, 1.22803, 18.0209)
+>>>>>>> 4894c5538d62e198c2b03f80be1de28cdc20588a

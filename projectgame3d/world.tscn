@@ -184,7 +184,7 @@ size = Vector3(0.0413666, 1, 0.0354004)
 size = Vector3(1.15857, 0.54248, 0.334961)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_jjr1n"]
-size = Vector3(0.51001, 0.557495, 2.58762)
+size = Vector3(0.358032, 0.557495, 2.58762)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_bo7i5"]
 size = Vector3(7.95801, 5.02527, 2.41754)
@@ -1405,11 +1405,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.58106, -0.22876, 0.748395)
 shape = SubResource("BoxShape3D_bh8nc")
 
 [node name="CollisionShape3D14" type="CollisionShape3D" parent="House/Parking Lot/StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.242555, -0.221252, -0.729477)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.188179, -0.221252, -0.729477)
 shape = SubResource("BoxShape3D_jjr1n")
 
 [node name="CollisionShape3D15" type="CollisionShape3D" parent="House/Parking Lot/StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.79419, -0.221252, -0.729477)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.98071, -0.221252, -0.729477)
 shape = SubResource("BoxShape3D_jjr1n")
 
 [node name="Building1_Large" parent="House" instance=ExtResource("26_bo7i5")]

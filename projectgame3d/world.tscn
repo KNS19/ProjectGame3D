@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://ga4brol6kes6"]
+[gd_scene load_steps=35 format=3 uid="uid://ga4brol6kes6"]
 
 [ext_resource type="Texture2D" uid="uid://dchrq52ekajcy" path="res://weapons/sword/katana.png" id="1_036b0"]
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://rafw80j1xwe8" path="res://weapons/medic/medic.png" id="4_wse8f"]
 [ext_resource type="PackedScene" uid="uid://qwneja0cc3dx" path="res://Character/MiniBoss.tscn" id="9_ioo17"]
 [ext_resource type="PackedScene" uid="uid://bij7s40wd80t5" path="res://Building/Street Light/Street.tscn" id="10_wse8f"]
+[ext_resource type="PackedScene" uid="uid://cw3ewsvgwxnr4" path="res://Building/Street Light/StreetLights.tscn" id="12_k3n1d"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tlwt5"]
 bg_color = Color(0.144022, 0.648083, 0.875533, 1)
@@ -124,6 +125,10 @@ size = Vector3(2.5, 0.5, 3)
 [sub_resource type="BoxShape3D" id="BoxShape3D_rxeai"]
 size = Vector3(3, 0.5, 3)
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ic0uy"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_k3n1d"]
+
 [node name="World" type="Node3D"]
 script = ExtResource("1_ic0uy")
 
@@ -211,8 +216,6 @@ environment = SubResource("Environment_g3bud")
 transform = Transform3D(0.866025, 0.25, -0.433013, 0, 0.866026, 0.5, 0.5, -0.433013, 0.75, 0, 6, 0)
 shadow_enabled = true
 
-[node name="SkySphere" type="MeshInstance3D" parent="."]
-
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
 transform = Transform3D(-0.259511, 0.95431, 0.148144, 0.0268235, 0.160462, -0.986678, -0.965367, -0.25208, -0.0672397, -3.5, 1.5, -0.5)
 collision_layer = 4
@@ -233,10 +236,10 @@ material = SubResource("StandardMaterial3D_13kt2")
 shape = SubResource("BoxShape3D_dmhl4")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.256989, 0, -36.3025)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.06329, 0, -36.3025)
 use_collision = true
 collision_mask = 7
-size = Vector3(55.1928, 2, 802.516)
+size = Vector3(665, 2, 802.516)
 material = SubResource("ShaderMaterial_rwhea")
 
 [node name="AnimationBody3D3" type="AnimatableBody3D" parent="."]
@@ -266,7 +269,7 @@ libraries = {
 script = SubResource("GDScript_fj7yv")
 
 [node name="StaticProps" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 5.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4437, -1.90735e-06, 5.53012)
 
 [node name="StaticBody3D" type="StaticBody3D" parent="StaticProps"]
 transform = Transform3D(-2.33351e-15, 1, -4.37114e-08, -0.422618, -3.9616e-08, -0.906308, -0.906308, 1.84732e-08, 0.422618, -8, 2.3, -1)
@@ -410,4 +413,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.9794, 7.26853, -4.89477)
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -12.3759, 1.0009, -7.44402)
 
 [node name="street" parent="." instance=ExtResource("10_wse8f")]
-transform = Transform3D(6.96602, 0, 0, 0, 1.27124, 0, 0, 0, 91.9734, 0, 1.06014, -6.98126)
+transform = Transform3D(4.05896, 0, 0, 0, 1.27124, 0, 0, 0, 91.9734, 0, 1.06014, -6.98126)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="street"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="street/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="StreetLights" parent="." instance=ExtResource("12_k3n1d")]
+transform = Transform3D(-0.0369228, 0, 0.999318, 0, 1, 0, -0.999318, 0, -0.0369228, -14.6266, 1.1904, 0)

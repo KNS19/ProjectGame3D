@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=4 uid="uid://lmvb8bujwyww"]
+[gd_scene load_steps=10 format=4 uid="uid://lmvb8bujwyww"]
 
 [ext_resource type="Script" uid="uid://b6lneflmk31fl" path="res://Building/Barier/plastic_barrier.gd" id="1_72ny8"]
 
@@ -153,6 +153,9 @@ shadow_mesh = SubResource("ArrayMesh_swqwk")
 [sub_resource type="BoxShape3D" id="BoxShape3D_72ny8"]
 size = Vector3(2.69244, 1.96332, 5.30768)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_6g163"]
+size = Vector3(2.51985, 1.95789, 5.07907)
+
 [node name="CarBroak" type="Node3D" groups=["player"]]
 script = ExtResource("1_72ny8")
 
@@ -169,3 +172,10 @@ collision_mask = 11
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0765686, 0.761773, 0.198853)
 shape = SubResource("BoxShape3D_72ny8")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_mask = 15
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0917435, 0.799561, 0.153366)
+shape = SubResource("BoxShape3D_6g163")

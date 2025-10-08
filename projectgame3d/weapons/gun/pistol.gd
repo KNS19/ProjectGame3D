@@ -10,10 +10,10 @@ signal reload_finished
 @export var ammo_reserve: int = -1             # กระสุนสำรองที่พกอยู่ไม่จำกัด
 @export var allow_dry_fire_click: bool = true  # ให้คลิกแห้งเมื่อแม็กว่าง
 @export var auto_reload_on_empty: bool = true    # หมดแม็กแล้วรีโหลดอัตโนมัติ
-@export var auto_reload_delay: float = 0.08      # หน่วงนิดให้แอนิเมชัน/เสียงยิงออกก่อน
+@export var auto_reload_delay: float = 3      # หน่วงนิดให้แอนิเมชัน/เสียงยิงออกก่อน
 @export var damage: float = 20.0
 @export var range: float = 200.0                 # ระยะยิงสูงสุด
-@export var fire_rate: float = 6.0               # นัด/วินาที
+@export var fire_rate: float = 2.0               # นัด/วินาที
 
 # ---- Nodes / assets ----
 @export var camera_path: NodePath                # Camera3D ของผู้เล่น

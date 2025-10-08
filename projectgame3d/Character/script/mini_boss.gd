@@ -19,7 +19,8 @@ const ANIM_RUN = "CharacterArmature|Run_Arms"
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var attack_Left_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/Hand_Left/Left_Area"
 @onready var attack_Right_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/Hand_Right/Right_Area"
-@onready var body_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Body/BodyArea" 
+@onready var body_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Body/BodyArea"
+@onready var loop_sfx: AudioStreamPlayer3D = $LoopSfx 
 # BodyArea ยังคงอยู่ใน @onready แต่จะไม่ถูกใช้รับดาเมจอีกแล้ว
 
 # --- Boss State Machine ---
@@ -224,6 +225,8 @@ func take_damage(damage_amount: float, source: Variant = null):
 func _on_detection_area_body_entered(body: Node3D):
 	if body.is_in_group("player"):
 		player_target = body as CharacterBody3D
+		if not loop_sfx.playing:
+			loop_sfx.play()  # 🔊 เริ่มเล่นเสียงวน
 		if current_state == State.IDLE:
 			set_state(State.CHASE)
 

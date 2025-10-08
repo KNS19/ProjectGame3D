@@ -16,6 +16,10 @@ func swing():
 		return
 	_is_swinging = true
 	_already_hit.clear()
+	
+		# ✅ เล่นเสียงฟัน
+	if has_node("SlashSfx"):
+		$SlashSfx.play()
 
 	# เปิด hitbox ชั่วคราว 0.25 วิ
 	area.monitoring = true

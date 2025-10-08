@@ -1,7 +1,8 @@
-[gd_scene load_steps=30 format=4 uid="uid://qwneja0cc3dx"]
+[gd_scene load_steps=31 format=4 uid="uid://qwneja0cc3dx"]
 
 [ext_resource type="Script" uid="uid://cfrjw4j5un0yd" path="res://Character/script/mini_boss.gd" id="1_1od1h"]
 [ext_resource type="Texture2D" uid="uid://dt0oy6klhhh5y" path="res://Character/Zombie (3)_Zombie_Atlas.png" id="1_5sjlp"]
+[ext_resource type="AudioStream" uid="uid://ca7u1qogyw65a" path="res://sounds/เสียงซอมบี้บอส.mp3" id="3_y7vfh"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t0j58"]
 resource_name = "Atlas"
@@ -7254,3 +7255,7 @@ shape = SubResource("BoxShape3D_1od1h")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.999506, 0.0314282, 0, -0.0314282, 0.999506, 0, 0.807559, -0.0743242)
 shape = SubResource("CapsuleShape3D_y7vfh")
+
+[node name="LoopSfx" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_y7vfh")
+parameters/looping = true

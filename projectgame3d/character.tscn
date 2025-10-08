@@ -1,7 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://doh0w0if3r85g"]
+[gd_scene load_steps=9 format=3 uid="uid://doh0w0if3r85g"]
 
 [ext_resource type="Script" uid="uid://bkgt1c026ks6g" path="res://character.gd" id="1_pjt0s"]
 [ext_resource type="PackedScene" uid="uid://bgxqu6dnybtbf" path="res://Character/CSGMesh3D.tscn" id="2_wa5vi"]
+[ext_resource type="AudioStream" uid="uid://b4dtw7v2rv5c4" path="res://sounds/เสียงเดิน.mp3" id="3_wfnr8"]
+[ext_resource type="AudioStream" uid="uid://bg7rgpai5p3uc" path="res://sounds/เสียงวิ่ง.mp3" id="4_px5sl"]
+[ext_resource type="AudioStream" uid="uid://cmll4wq62i3bp" path="res://sounds/เสียงโดด.mp3" id="5_px5sl"]
+[ext_resource type="AudioStream" uid="uid://u3nf3375jsdr" path="res://sounds/เสียงโดนดาเมจ.mp3" id="6_0qfo5"]
+[ext_resource type="AudioStream" uid="uid://hagu7mabeqja" path="res://sounds/เสียงheal.mp3" id="7_yxww1"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8wiiv"]
 
@@ -20,3 +25,20 @@ shape = SubResource("CapsuleShape3D_8wiiv")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 5.19503e-09, 3.20142e-10, -6.71108e-12, 0.97437, 0.224951, 0, -0.224951, 0.97437, 0.66744, 1.94392, 1.62737)
+
+[node name="WalkSfx" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_wfnr8")
+
+[node name="RunSfx" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_px5sl")
+
+[node name="JumpSfx" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_px5sl")
+pitch_scale = 2.0
+
+[node name="HurtSfx" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_0qfo5")
+pitch_scale = 2.0
+
+[node name="HealSfx" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("7_yxww1")

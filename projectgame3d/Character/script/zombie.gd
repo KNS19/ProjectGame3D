@@ -27,6 +27,7 @@ const ANIM_DEATH = "Armature|Die"
 @onready var head_area: Area3D = $"RootNode/Armature/Skeleton3D/BoneAttachment3D_Head/HeadArea"
 @onready var body_area: Area3D = $"RootNode/Armature/Skeleton3D/BoneAttachment3D_Body/BodyArea"
 @export var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
+@onready var loop_sfx: AudioStreamPlayer3D = $LoopSfx
 
 func _ready():
 	detection_area.body_entered.connect(_on_body_entered)
@@ -125,6 +126,8 @@ func _on_body_entered(body):
 	if body.is_in_group("player"):
 		if not players.has(body):
 			players.append(body)
+			if not loop_sfx.playing:
+				loop_sfx.play()  # 🔊 เริ่มเล่นเสียงวน
 			if not is_screaming and not is_attacking and players.size() == 1 and anim.has_animation(ANIM_SCREAM):
 				_do_scream()
 

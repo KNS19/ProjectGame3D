@@ -35,6 +35,7 @@ const ANIM_DEATH = "Death"
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var head_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Head/HeadArea"
 @onready var body_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Body/BodyArea"
+@onready var loop_sfx: AudioStreamPlayer3D = $LoopSfx
 
 func _ready():
 	detection_area.body_entered.connect(_on_body_entered)
@@ -53,6 +54,10 @@ func _ready():
 	if anim.has_animation(ANIM_IDLE):
 		_play_animation_safe(ANIM_IDLE)
 
+	# 🔊 เริ่มเล่นเสียงวน
+	if loop_sfx and loop_sfx.stream:
+		loop_sfx.stream.set_loop(true)
+		loop_sfx.play()
 
 # --------------------------------------------------------------------------------
 ## ระบบดาเมจและการตาย
@@ -113,6 +118,9 @@ func _die():
 	is_dead = true
 	set_physics_process(false)
 	velocity = Vector3.ZERO
+	
+	if loop_sfx:
+		loop_sfx.stop()  # 🔇 หยุดเสียงเมื่อมอนตาย
 
 	if anim.has_animation(ANIM_DEATH):
 		_play_animation_safe(ANIM_DEATH)

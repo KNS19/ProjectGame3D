@@ -80,7 +80,11 @@ var is_healing: bool = false
 @onready var kick_L = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Leg_L/Leg_L_Area
 @onready var kick_R = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/BoneAttachment3D_Leg_R/Leg_R_Area
 @onready var medic = $CSGMesh3D/RootNode/CharacterArmature/Skeleton3D/WeaponSlot/HealItem
-
+@onready var walk_sfx: AudioStreamPlayer3D = $WalkSfx
+@onready var run_sfx: AudioStreamPlayer3D = $RunSfx
+@onready var jump_sfx: AudioStreamPlayer3D = $JumpSfx
+@onready var hurt_sfx: AudioStreamPlayer3D = $HurtSfx
+@onready var heal_sfx: AudioStreamPlayer3D = $HealSfx
 
 # --- Animations ---
 @export var ANIM_IDLE = "CharacterArmature|Idle"
@@ -289,6 +293,8 @@ func _physics_process(_delta):
 
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor() and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		velocity.y = JUMP_VELOCITY
+		if is_instance_valid(jump_sfx):
+			jump_sfx.play()
 
 	var input_vec = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var cur_speed = SPEED
@@ -346,6 +352,31 @@ func _physics_process(_delta):
 		if stamina >= attack_cost and (current_time - last_attack_time >= attack_cooldown):
 			print("[DEBUG] punch attack")
 			_do_attack(current_time)
+	
+		# --- เล่นเสียงเดิน/วิ่ง ---
+	if is_on_floor() and not is_attacking and not is_rolling:
+		var speed = velocity.length()
+		if speed > 0.1:
+			if Input.is_action_pressed("run"):
+				if not run_sfx.playing:
+					run_sfx.play()
+				if walk_sfx.playing:
+					walk_sfx.stop()
+			else:
+				if not walk_sfx.playing:
+					walk_sfx.play()
+				if run_sfx.playing:
+					run_sfx.stop()
+		else:
+			if walk_sfx.playing:
+				walk_sfx.stop()
+			if run_sfx.playing:
+				run_sfx.stop()
+	else:
+		if walk_sfx.playing:
+			walk_sfx.stop()
+		if run_sfx.playing:
+			run_sfx.stop()
 
 	move_and_slide()
 	force_update_transform()
@@ -383,7 +414,8 @@ func take_damage(amount: float, _source: Variant = null) -> void:
 		if anim_player and anim_player.has_animation("CharacterArmature|HitRecieve_2"):
 			anim_player.play("CharacterArmature|HitRecieve_2")
 		_apply_stun(stun_duration)
-		
+	if is_instance_valid(hurt_sfx):
+		hurt_sfx.play()
 
 func heal(amount: float) -> void:
 	if is_dead: return
@@ -519,6 +551,10 @@ func _use_heal():
 
 	if is_instance_valid(medic):
 		medic.visible = true
+		
+	# ✅ เล่นเสียง Heal ตอนเริ่มใช้ยา
+	if is_instance_valid(heal_sfx):
+		heal_sfx.play()
 
 	if anim_player and anim_player.has_animation("CharacterArmature|Interact"):
 		anim_player.play("CharacterArmature|Interact")

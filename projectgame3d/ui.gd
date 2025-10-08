@@ -23,4 +23,4 @@ func format_time(total_seconds: int) -> String:
 # ฟังก์ชันสาธารณะสำหรับเพิ่มสกอร์
 func add_kill_score(points: int = 1):
 	kill_score += points
-	score_label.text = "Score:: " + str(kill_score) # อัปเดต Label สกอร์
+	score_label.text = "Score: " + str(kill_score) # อัปเดต Label สกอร์

@@ -236,10 +236,9 @@ material = SubResource("StandardMaterial3D_13kt2")
 shape = SubResource("BoxShape3D_dmhl4")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.06329, 0, -36.3025)
 use_collision = true
 collision_mask = 7
-size = Vector3(665, 2, 802.516)
+size = Vector3(300, 1, 300)
 material = SubResource("ShaderMaterial_rwhea")
 
 [node name="AnimationBody3D3" type="AnimatableBody3D" parent="."]
@@ -412,13 +411,766 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.9794, 7.26853, -4.89477)
 [node name="MiniBoss" parent="." instance=ExtResource("9_ioo17")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -12.3759, 1.0009, -7.44402)
 
-[node name="street" parent="." instance=ExtResource("10_wse8f")]
-transform = Transform3D(4.05896, 0, 0, 0, 1.27124, 0, 0, 0, 91.9734, 0, 1.06014, -6.98126)
+[node name="road" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 1.42659)
 
-[node name="StaticBody3D" type="StaticBody3D" parent="street"]
+[node name="street" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0.257965)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street"]
 physics_material_override = SubResource("PhysicsMaterial_ic0uy")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="street/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street2" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 8)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street2"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street2/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street3" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 16)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street3"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street3/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street4" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 24)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street4"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street4/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street5" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 32)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street5"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street5/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street6" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 40)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street6"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street6/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street7" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 48)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street7"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street7/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street8" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 56)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street8"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street8/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street9" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 64)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street9"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street9/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street10" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 72)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street10"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street10/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street11" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 80)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street11"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street11/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street12" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 88)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street12"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street12/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street13" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 96)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street13"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street13/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street14" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 104)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street14"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street14/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street15" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 112)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street15"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street15/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street16" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 120)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street16"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street16/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street17" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 128)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street17"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street17/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street18" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 136)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street18"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street18/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street19" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 144)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street19"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street19/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street38" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -147.71)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street38"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street38/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street39" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -139.71)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street39"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street39/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street40" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -131.71)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street40"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street40/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street41" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -123.71)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street41"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street41/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street42" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -115.71)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street42"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street42/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street43" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -107.71)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street43"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street43/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street44" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -99.7098)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street44"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street44/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street45" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -91.7098)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street45"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street45/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street46" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -83.7098)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street46"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street46/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street47" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -75.7098)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street47"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street47/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street48" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -67.7098)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street48"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street48/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street49" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -59.7098)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street49"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street49/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street50" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -51.7098)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street50"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street50/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street51" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -43.7098)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street51"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street51/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street52" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -35.7098)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street52"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street52/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street53" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -29.7098)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street53"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street53/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street54" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -23.7098)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street54"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street54/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street55" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -15.7098)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street55"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street55/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street56" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -7.70979)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street56"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street56/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street57" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 2.60826, 1, -2.34801)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street57"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street57/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street58" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10.3503, 1, -2.34126)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street58"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street58/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street59" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 18.3503, 1, -2.33428)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street59"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street59/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street60" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 26.3503, 1, -2.3273)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street60"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street60/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street61" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 34.3503, 1, -2.32031)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street61"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street61/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street62" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 42.3503, 1, -2.31333)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street62"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street62/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street63" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 50.3503, 1, -2.30635)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street63"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street63/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street64" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 58.3503, 1, -2.29937)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street64"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street64/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street65" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 66.3503, 1, -2.29239)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street65"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street65/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street66" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 74.3503, 1, -2.28541)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street66"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street66/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street67" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 82.3503, 1, -2.27842)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street67"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street67/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street68" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 90.3503, 1, -2.27144)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street68"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street68/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street69" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 98.3503, 1, -2.26446)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street69"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street69/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street70" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 106.35, 1, -2.25748)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street70"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street70/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street71" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 114.35, 1, -2.2505)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street71"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street71/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street72" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 122.35, 1, -2.24352)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street72"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street72/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street73" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 130.35, 1, -2.23654)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street73"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street73/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street74" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 138.35, 1, -2.22955)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street74"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street74/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street75" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 146.35, 1, -2.22257)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street75"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street75/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street94" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -145.359, 1, -2.47714)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street94"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street94/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street95" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -137.359, 1, -2.47016)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street95"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street95/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street96" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -129.359, 1, -2.46318)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street96"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street96/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street97" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -121.359, 1, -2.4562)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street97"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street97/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street98" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -113.359, 1, -2.44922)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street98"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street98/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street99" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -105.359, 1, -2.44224)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street99"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street99/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street100" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -97.3595, 1, -2.43526)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street100"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street100/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street101" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -89.3595, 1, -2.42827)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street101"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street101/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street102" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -81.3595, 1, -2.42129)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street102"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street102/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street103" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -73.3595, 1, -2.41431)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street103"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street103/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street104" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -65.3595, 1, -2.40733)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street104"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street104/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street105" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -57.3595, 1, -2.40035)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street105"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street105/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street106" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -49.3595, 1, -2.39337)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street106"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street106/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street107" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -41.3595, 1, -2.38638)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street107"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street107/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street108" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -33.3595, 1, -2.3794)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street108"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street108/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street109" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -27.3595, 1, -2.37417)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street109"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street109/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street110" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -21.3595, 1, -2.36893)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street110"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street110/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street111" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -13.3595, 1, -2.36195)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street111"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street111/StaticBody3D"]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+shape = SubResource("WorldBoundaryShape3D_k3n1d")
+
+[node name="street112" parent="road" instance=ExtResource("10_wse8f")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -5.3595, 1, -2.35497)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="road/street112"]
+physics_material_override = SubResource("PhysicsMaterial_ic0uy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="road/street112/StaticBody3D"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 shape = SubResource("WorldBoundaryShape3D_k3n1d")
 

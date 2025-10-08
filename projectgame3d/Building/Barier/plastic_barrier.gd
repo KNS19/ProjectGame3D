@@ -14,11 +14,6 @@ func take_damage(damage: float, hit_part: String = "Body"):
 
 	var final_damage = damage
 	
-	# ถ้าโดน Headshot ให้ตายทันที (หากต้องการ)
-	if hit_part == "Head":
-		final_damage = health # ดาเมจเท่ากับพลังชีวิตที่เหลือ
-		print(owner.name, " HEADSHOT! Instant destruction.")
-
 	health -= final_damage
 	health = max(0.0, health) # ไม่ให้พลังชีวิตติดลบ
 

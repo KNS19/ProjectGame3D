@@ -14,8 +14,10 @@ var is_attacking: bool = false
 @export var health: float = 120.0
 var is_dead: bool = false
 var is_stunned: bool = false # ✅ สถานะสตั้น
+var current_target: Node3D = null # ✅ เพิ่มตัวแปรเป้าหมายที่ล็อกไว้ระหว่างโจมตี
 
 var score_value: int = 150  # ปรับค่าได้ตามประเภทซอมบี้
+
 # --- Animations ---
 const ANIM_WALK = "Armature|Walk2"
 const ANIM_IDLE = "Armature|Idle"
@@ -23,7 +25,6 @@ const ANIM_SCREAM = "Armature|Scream"
 const ANIM_DEATH = "Armature|Die"
 
 # --- Nodes ---
-# ❌ ไม่ใช้ DetectionArea อีกต่อไป
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var head_area: Area3D = $"RootNode/Armature/Skeleton3D/BoneAttachment3D_Head/HeadArea"
 @onready var body_area: Area3D = $"RootNode/Armature/Skeleton3D/BoneAttachment3D_Body/BodyArea"
@@ -32,7 +33,6 @@ const ANIM_DEATH = "Armature|Die"
 @onready var footstep_sfx: AudioStreamPlayer3D = $WalkSfx
 
 func _ready():
-	# ✅ ดึงผู้เล่นทุกคนจากกลุ่ม "player" มาใส่ใน list ตั้งแต่เริ่ม
 	players = get_tree().get_nodes_in_group("player")
 
 	if is_instance_valid(head_area):
@@ -49,7 +49,7 @@ func _ready():
 		_play_animation_safe(ANIM_IDLE)
 
 # --------------------------------------------------------------------------------
-## ระบบดาเมจและการตาย (ไม่เปลี่ยน)
+## ระบบดาเมจและการตาย
 # --------------------------------------------------------------------------------
 func _on_hit_area_entered(area: Area3D, hit_part: String):
 	if area.is_in_group("player_weapon"):
@@ -108,19 +108,16 @@ func _die():
 		_play_animation_safe(ANIM_DEATH)
 		if is_instance_valid(anim):
 			await anim.animation_finished
-			
-		
-		var game_ui = get_tree().get_root().find_child("UI", true, false) # สมมติตามชื่อ
-		# 2. เรียกฟังก์ชันเพิ่มสกอร์
+
+		var game_ui = get_tree().get_root().find_child("UI", true, false)
 		if game_ui:
-			game_ui.add_kill_score(150) # เพิ่ม 1 คะแนน
+			game_ui.add_kill_score(150)
 	queue_free()
 
 # --------------------------------------------------------------------------------
-## AI และการเคลื่อนที่ (แก้เฉพาะส่วนนี้)
+## AI และการเคลื่อนที่ (เฉพาะส่วนนี้มีการเพิ่ม current_target)
 # --------------------------------------------------------------------------------
 func _physics_process(delta):
-	# ✅ อัปเดตรายชื่อผู้เล่นทุกเฟรม (ในกรณี player ถูกสร้าง/ลบระหว่างเกม)
 	players = get_tree().get_nodes_in_group("player")
 
 	if is_dead or is_stunned:
@@ -132,6 +129,8 @@ func _physics_process(delta):
 		return
 
 	if is_screaming or is_attacking:
+		if is_instance_valid(current_target):
+			look_at(current_target.global_transform.origin, Vector3.UP, true)
 		velocity.x = 0
 		velocity.z = 0
 		if not is_on_floor():
@@ -168,6 +167,7 @@ func _physics_process(delta):
 			velocity.y -= gravity * delta
 		move_and_slide()
 		if not is_attacking and anim.has_animation(ANIM_ATTACK):
+			current_target = nearest  # ✅ ล็อกเป้าหมายที่ใกล้สุดตอนเริ่มโจมตี
 			_do_attack()
 	else:
 		var dir = (nearest.global_transform.origin - global_transform.origin).normalized()
@@ -177,10 +177,9 @@ func _physics_process(delta):
 			velocity.y -= gravity * delta
 		move_and_slide()
 		_play_animation_safe(ANIM_WALK)
-		# --- เล่นเสียงเดิน ---
 		if not footstep_sfx.playing:
 			footstep_sfx.play()
-			
+
 func _do_attack():
 	is_attacking = true
 	_play_animation_safe(ANIM_ATTACK)
@@ -191,6 +190,7 @@ func _do_attack():
 	_deal_damage()
 	await get_tree().create_timer(attack_time * 0.5).timeout
 	is_attacking = false
+	current_target = null  # ✅ ปลดล็อกเป้าหมายหลังโจมตีจบ
 
 func _deal_damage():
 	for p in players:

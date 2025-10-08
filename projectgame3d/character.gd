@@ -95,6 +95,8 @@ var is_healing: bool = false
 @export var ANIM_FIRE = "PistolArmature|Fire"
 @export var ANIM_RELOAD = "PistolArmature|Reload"
 @export var ANIM_SLIDE = "PistolArmature|Slide"
+@export var reload_anim_delay: float = 0.12   # หน่วงก่อนเล่นท่ารีโหลด (วินาที)
+@export var reload_anim_speed: float = 1.0    # ความเร็วท่ารีโหลด (1.0 = ปกติ)
 
 @export var ANIM_IDLE_SWORD = "CharacterArmature|Idle_Sword"
 @export var ANIM_SLASH_SWORD = "CharacterArmature|Sword_Slash"
@@ -110,7 +112,8 @@ func _ready():
 
 	# ✅ ต่อสัญญาณจากปืนให้ถูกอินเดนต์ และเช็กว่ามีโหนดจริง
 	if is_instance_valid(pistol):
-		# ป้องกันเคสต่อซ้ำ (เช่นเข้า-ออกฉาก)
+		if not pistol.is_connected("reload_started", Callable(self, "_on_pistol_reload_started")):
+			pistol.connect("reload_started", Callable(self, "_on_pistol_reload_started"))
 		if not pistol.is_connected("reload_finished", Callable(self, "_on_pistol_reload_finished")):
 			pistol.connect("reload_finished", Callable(self, "_on_pistol_reload_finished"))
 
@@ -136,11 +139,58 @@ func _ready():
 	if weapon_ui and weapon_ui.has_method("update_slots"):
 		weapon_ui.update_slots(has_sword, has_gun, has_medic)
 
+func _on_pistol_reload_started() -> void:
+	is_reloading_gun = true
+	if not anim_player:
+		return
+
+	# หน่วงก่อนเล่น (กันกระชากจากจังหวะยิง)
+	if reload_anim_delay > 0.0:
+		await get_tree().create_timer(reload_anim_delay).timeout
+
+	# ลดความเร็วชั่วคราว แล้วเล่นท่า
+	var old_speed := anim_player.speed_scale
+	anim_player.speed_scale = reload_anim_speed
+
+	if anim_player.has_animation(ANIM_SLASH_SWORD):
+		anim_player.play(ANIM_SLASH_SWORD)
+
+	# ประเมินเวลาเล่นจริง (ยาวขึ้นตาม speed_scale) เพื่อคืน speed ทีหลัง
+	var dur = anim_player.current_animation_length / max(0.001, anim_player.speed_scale)
+	get_tree().create_timer(dur).timeout.connect(func():
+		if is_instance_valid(anim_player):
+			anim_player.speed_scale = old_speed
+	)
+
+
 # ฟังก์ชันรับสัญญาณรีโหลดเสร็จ
 func _on_pistol_reload_finished() -> void:
 	is_reloading_gun = false
-	if anim_player and anim_player.has_animation(ANIM_IDLE_GUN):
-		anim_player.play(ANIM_IDLE_GUN)
+	if anim_player:
+		anim_player.speed_scale = 1.0   # คืนความเร็วเผื่อกรณีโดนขัดจังหวะ
+
+	var mv := Input.get_vector("move_left","move_right","move_forward","move_backward")
+	var moving := mv.length() > 0.1
+	var running := Input.is_action_pressed("run") and stamina > 0
+
+	if not anim_player:
+		return
+
+	if has_gun:
+		if is_aiming and anim_player.has_animation(ANIM_AIM_GUN):
+			anim_player.play(ANIM_AIM_GUN)
+		elif moving:
+			if running and anim_player.has_animation(ANIM_RUN_SHOOT):
+				anim_player.play(ANIM_RUN_SHOOT)
+			else:
+				anim_player.play(ANIM_WALK)
+		else:
+			anim_player.play(ANIM_IDLE_GUN)
+	else:
+		if moving:
+			anim_player.play(ANIM_RUN if running else ANIM_WALK)
+		else:
+			anim_player.play(ANIM_IDLE)
 
 # -----------------------------------------------
 # INPUT & MOVEMENT
@@ -185,6 +235,12 @@ func _unhandled_key_input(_event):
 	# กด R เพื่อ reload (เฉพาะตอนถือปืน)
 	if Input.is_action_just_pressed("reload"):
 		if has_gun and is_instance_valid(pistol) and pistol.has_method("try_reload"):
+			var need = pistol.mag_size - pistol.ammo_in_mag
+			var reserve_ok = (pistol.ammo_reserve < 0) or (pistol.ammo_reserve > 0)  # <0 = unlimited
+			# ไม่อนุญาตรีโหลดถ้าแม็กเต็ม หรือไม่มีกระสุนสำรอง
+			if need <= 0 or not reserve_ok:
+			# (ตัวเลือก) เล่นเสียงแจ้งเตือน/โชว์ UI ที่นี่
+				return
 			is_reloading_gun = true 
 			pistol.try_reload()
 			# (ตัวเลือก) เล่นท่าร่างกายตอนรีโหลด ถ้ามี
@@ -488,7 +544,7 @@ func _update_animation(input_vec: Vector2):
 		if is_aiming:
 			anim_player.play(ANIM_AIM_GUN)
 		elif moving:
-			anim_player.play(ANIM_RUN_SHOOT if running else ANIM_WALK)
+			anim_player.play(ANIM_RUN if running else ANIM_WALK)
 		else:
 			anim_player.play(ANIM_IDLE_GUN)
 	else:

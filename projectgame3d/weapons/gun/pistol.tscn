@@ -5,6 +5,7 @@
 
 [node name="Pistol" instance=ExtResource("1_bg532")]
 script = ExtResource("2_vs7sk")
+auto_reload_delay = 1.0
 anim_player_path = NodePath("AnimationPlayer")
 
 [node name="Skeleton3D" parent="RootNode/PistolArmature" index="0"]

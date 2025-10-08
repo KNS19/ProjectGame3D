@@ -7,9 +7,10 @@ signal reload_finished
 # ===== ammo =====
 @export var mag_size: int = 12                 # ความจุแม็ก
 @export var ammo_in_mag: int = 12              # กระสุนที่เหลือในแม็กตอนเริ่ม
-@export var ammo_reserve: int = 72             # กระสุนสำรองที่พกอยู่
+@export var ammo_reserve: int = -1             # กระสุนสำรองที่พกอยู่ไม่จำกัด
 @export var allow_dry_fire_click: bool = true  # ให้คลิกแห้งเมื่อแม็กว่าง
-
+@export var auto_reload_on_empty: bool = true    # หมดแม็กแล้วรีโหลดอัตโนมัติ
+@export var auto_reload_delay: float = 0.08      # หน่วงนิดให้แอนิเมชัน/เสียงยิงออกก่อน
 @export var damage: float = 20.0
 @export var range: float = 200.0                 # ระยะยิงสูงสุด
 @export var fire_rate: float = 6.0               # นัด/วินาที
@@ -27,6 +28,7 @@ signal reload_finished
 @export var ANIM_RELOAD = "PistolArmature|Reload"
 @export var ANIM_SLIDE = "PistolArmature|Slide"
 @export var fire_anim_restart: bool = true       # ยิงซ้ำให้รีสตาร์ทคลิปได้ไหม
+@export var ANIM_SLASH_SWORD = "CharacterArmature|Sword_Slash"
 
 @onready var _cam: Camera3D = get_node_or_null(camera_path)
 @onready var _muzzle: Marker3D = get_node_or_null(muzzle_path)
@@ -34,6 +36,7 @@ signal reload_finished
 @onready var _flash_particle: GPUParticles3D = $MuzzleFlash if has_node("MuzzleFlash") else null
 @onready var _anim: AnimationPlayer = get_node_or_null(anim_player_path)
 @onready var _dry_sfx: AudioStreamPlayer3D = $DrySfx if has_node("DrySfx") else null
+@onready var anim_player: AnimationPlayer = $CSGMesh3D/AnimationPlayer
 
 var _last_shot_time := -9999.0
 var _is_reloading := false
@@ -120,24 +123,46 @@ func try_fire() -> void:
 			get_tree().current_scene.add_child(impact)
 			impact.global_transform.origin = pos
 			impact.look_at(pos + normal, Vector3.UP)
-
+			
+	# --- ยิงเสร็จ: ถ้าแม็กหมด ให้รีโหลดอัตโนมัติ (ถ้าตั้งไว้และมีสำรอง/ไม่จำกัด) ---
+	if ammo_in_mag == 0 and auto_reload_on_empty and _can_reload():
+		if auto_reload_delay <= 0.0:
+			anim_player.play(ANIM_SLASH_SWORD)
+			try_reload()
+			
+		else:
+			var t := get_tree().create_timer(auto_reload_delay)
+			t.timeout.connect(Callable(self, "try_reload"))
+			
 # -------------------- Reload & Slide API --------------------
+func _reserve_unlimited() -> bool:
+	return ammo_reserve < 0
+	
+func _can_reload() -> bool:
+	var need := mag_size - ammo_in_mag
+	return need > 0 and (_reserve_unlimited() or ammo_reserve > 0)
+	
 var _pending_reload: int = 0
+
 func try_reload() -> void:
 	if _is_reloading:
 		return
 	# คำนวณว่าควรเติมกี่นัด
 	var need := mag_size - ammo_in_mag
-	if need <= 0 or ammo_reserve <= 0:
+	if need <= 0:
 		return
 
-	_pending_reload = min(need, ammo_reserve)
+# ถ้าไม่ unlimited และสำรองหมด → ยกเลิก
+	if (not _reserve_unlimited()) and ammo_reserve <= 0:
+		return
+
+	# จำนวนที่จะเติม: ถ้า unlimited ก็เติมเต็ม need, ถ้าไม่ใช่ก็ขั้นต่ำ
+	_pending_reload = need if _reserve_unlimited() else min(need, ammo_reserve)
 	_is_reloading = true
 	reload_started.emit()  
 
 	if _anim and _anim.has_animation(ANIM_RELOAD):
 		_anim.play(ANIM_RELOAD)
-		#_anim.play(ANIM_SLIDE)
 	else:
 		# ถ้าไม่มีคลิป Reload ก็ถือว่ารีโหลดเสร็จทันที
 		_complete_reload()
@@ -153,7 +178,8 @@ func _on_anim_finished(name: StringName) -> void:
 func _complete_reload() -> void:
 	if _pending_reload > 0:
 		ammo_in_mag += _pending_reload
-		ammo_reserve -= _pending_reload
+		if not _reserve_unlimited():
+			ammo_reserve -= _pending_reload
 	_pending_reload = 0
 	_is_reloading = false
 	reload_finished.emit() 

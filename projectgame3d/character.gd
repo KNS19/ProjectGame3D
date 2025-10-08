@@ -357,7 +357,7 @@ func _physics_process(_delta):
 	if is_on_floor() and not is_attacking and not is_rolling:
 		var speed = velocity.length()
 		if speed > 0.1:
-			if Input.is_action_pressed("run"):
+			if Input.is_action_pressed("run") and stamina > 0:
 				if not run_sfx.playing:
 					run_sfx.play()
 				if walk_sfx.playing:

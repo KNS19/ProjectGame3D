@@ -1146,7 +1146,7 @@ transform = Transform3D(3, 0, 0, 0, 10, 0, 0, 0, 4.99017, -0.00494766, 9.02819, 
 shape = SubResource("BoxShape3D_wjb0r")
 
 [node name="CupicBar" type="MeshInstance3D" parent="House"]
-transform = Transform3D(-0.05, 0, -7.54979e-09, 0, 0.05, 0, 7.54979e-09, 0, -0.05, -24.9401, 0, -13.1142)
+transform = Transform3D(-0.05, 0, -7.54979e-09, 0, 0.05, 0, 7.54979e-09, 0, -0.05, -24.9401, 2.7599, -13.1142)
 material_override = SubResource("StandardMaterial3D_mc2jv")
 mesh = ExtResource("23_wjb0r")
 

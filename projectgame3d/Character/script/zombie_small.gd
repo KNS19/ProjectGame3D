@@ -69,7 +69,7 @@ func _on_hit_area_entered(area: Area3D, hit_part: String):
 			take_damage(damage_amount, hit_part)
 
 
-func take_damage(damage: float, hit_part: String):
+func take_damage(damage: float, hit_part: String = "Body"):
 	if is_dead:
 		return
 

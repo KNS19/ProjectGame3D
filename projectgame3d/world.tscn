@@ -125,7 +125,7 @@ offset_right = 1928.0
 offset_bottom = 980.0
 
 [node name="ColorRect" type="ColorRect" parent="UI/CenterContainer"]
-custom_minimum_size = Vector2(2, 2)
+custom_minimum_size = Vector2(3, 3)
 layout_mode = 2
 color = Color(0.835718, 3.22476e-06, 7.70092e-07, 1)
 

@@ -49,7 +49,7 @@ var attack_cooldown_phase2: float = 3.0
 # State Timers
 var attack_timer: float = 0.0
 var stun_timer: float = 0.0
-const STUN_DURATION: float = 2.0
+const STUN_DURATION: float = 0.5
 
 var player_target: CharacterBody3D = null
 
@@ -190,6 +190,10 @@ func set_state(new_state: State):
 		if anim and anim.has_animation(ANIM_DEATH):
 			anim.play(ANIM_DEATH)
 			print("🚨 Boss is dead. Playing DEATH animation.")
+			
+			await anim.animation_finished
+			print("💀 Boss death animation finished. Removing boss.")
+			queue_free()
 
 # ==============================================================================
 # 🟢 PUBLIC METHOD: รับดาเมจโดยตรงจาก Player (take_damage)

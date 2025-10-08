@@ -39,6 +39,9 @@ var attack_cooldown = 1.0
 var combo_window = 2.0
 var is_attacking = false
 
+var is_stunned: bool = false
+var stun_duration: float = 0.6
+
 # --- State ---
 var is_rolling = false
 var roll_timer = 0.0
@@ -273,6 +276,10 @@ func _do_attack(current_time: float) -> void:
 
 func _physics_process(_delta):
 	var current_time = Time.get_ticks_msec() / 1000.0
+	
+	if is_stunned:
+		velocity = Vector3.ZERO
+		return
 
 	if not Input.is_action_pressed("run") and not is_rolling and not is_attacking:
 		stamina = min(max_stamina, stamina + stamina_recovery * _delta)
@@ -348,6 +355,16 @@ func _physics_process(_delta):
 # -----------------------------------------------
 # HEALTH SYSTEM
 # -----------------------------------------------
+func _apply_stun(duration: float) -> void:
+	if is_stunned:
+		return # ถ้าสตันอยู่แล้ว ไม่ต้องซ้อน
+	is_stunned = true
+	print("😵 Player stunned for", duration, "seconds")
+	
+	await get_tree().create_timer(duration).timeout
+	is_stunned = false
+	print("✅ Stun ended")
+
 func take_damage(amount: float, _source: Variant = null) -> void:
 	if is_dead or is_invulnerable:
 		return
@@ -363,8 +380,10 @@ func take_damage(amount: float, _source: Variant = null) -> void:
 		_die()
 	else:
 		_start_invulnerability()
-		if anim_player and anim_player.has_animation(ANIM_HIT):
-			anim_player.play(ANIM_HIT)
+		if anim_player and anim_player.has_animation("CharacterArmature|HitRecieve_2"):
+			anim_player.play("CharacterArmature|HitRecieve_2")
+		_apply_stun(stun_duration)
+		
 
 func heal(amount: float) -> void:
 	if is_dead: return

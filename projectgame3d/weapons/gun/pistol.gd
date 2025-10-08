@@ -11,8 +11,8 @@ signal reload_finished
 @export var allow_dry_fire_click: bool = true  # ให้คลิกแห้งเมื่อแม็กว่าง
 @export var auto_reload_on_empty: bool = true    # หมดแม็กแล้วรีโหลดอัตโนมัติ
 @export var auto_reload_delay: float = 3      # หน่วงนิดให้แอนิเมชัน/เสียงยิงออกก่อน
-@export var damage: float = 20.0
-@export var range: float = 200.0                 # ระยะยิงสูงสุด
+@export var damage: float = 10.0
+@export var range: float = 100.0                 # ระยะยิงสูงสุด
 @export var fire_rate: float = 2.0               # นัด/วินาที
 
 # ---- Nodes / assets ----
@@ -36,7 +36,7 @@ signal reload_finished
 @onready var _flash_particle: GPUParticles3D = $MuzzleFlash if has_node("MuzzleFlash") else null
 @onready var _anim: AnimationPlayer = get_node_or_null(anim_player_path)
 @onready var _dry_sfx: AudioStreamPlayer3D = $DrySfx if has_node("DrySfx") else null
-@onready var anim_player: AnimationPlayer = $CSGMesh3D/AnimationPlayer
+@onready var anim_player: AnimationPlayer = $AnimationPlayer
 
 var _last_shot_time := -9999.0
 var _is_reloading := false
@@ -45,7 +45,7 @@ func _ready() -> void:
 	# fallback: ใช้ active camera ของ viewport ถ้าไม่ได้ assign
 	if _cam == null:
 		_cam = get_viewport().get_camera_3d()
-
+		
 	if _anim:
 		_anim.animation_finished.connect(_on_anim_finished)
 

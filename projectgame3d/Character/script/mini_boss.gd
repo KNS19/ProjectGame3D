@@ -10,6 +10,7 @@ const ANIM_SCREAM = "CharacterArmature|No"
 const ANIM_DEATH = "CharacterArmature|Death"
 const ANIM_RUN = "CharacterArmature|Run_Arms"
 
+var score_value: int = 300 # ปรับค่าได้ตามประเภทซอมบี้
 @export var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @export var movement_speed_phase1: float = 2.0
 @export var movement_speed_phase2: float = 6.0
@@ -203,6 +204,11 @@ func set_state(new_state: State):
 			
 			await anim.animation_finished
 			print("💀 Boss death animation finished. Removing boss.")
+			
+			var game_ui = get_tree().get_root().find_child("UI", true, false) # สมมติตามชื่อ
+		# 2. เรียกฟังก์ชันเพิ่มสกอร์
+			if game_ui:
+				game_ui.add_kill_score(300) # เพิ่ม 1 คะแนน
 			queue_free()
 
 # ==============================================================================

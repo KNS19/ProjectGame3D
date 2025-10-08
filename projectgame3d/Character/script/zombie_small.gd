@@ -15,6 +15,7 @@ var is_attacking: bool = false
 var is_dead: bool = false
 var is_stunned: bool = false
 
+var score_value: int = 100  # ปรับค่าได้ตามประเภทซอมบี้
 # --- Attack cooldown ---
 @export var attack_cooldown: float = 1.0
 var last_attack_time: float = -10.0
@@ -124,6 +125,11 @@ func _die():
 		_play_animation_safe(ANIM_DEATH)
 		if is_instance_valid(anim):
 			await anim.animation_finished
+			
+		var game_ui = get_tree().get_root().find_child("UI", true, false) # สมมติตามชื่อ
+		# 2. เรียกฟังก์ชันเพิ่มสกอร์
+		if game_ui:
+			game_ui.add_kill_score(100) # เพิ่ม 1 คะแนน
 	queue_free()
 
 # --------------------------------------------------------------------------------

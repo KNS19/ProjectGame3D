@@ -1,9 +1,10 @@
-[gd_scene load_steps=35 format=3 uid="uid://ga4brol6kes6"]
+[gd_scene load_steps=38 format=3 uid="uid://ga4brol6kes6"]
 
 [ext_resource type="Texture2D" uid="uid://dchrq52ekajcy" path="res://weapons/sword/katana.png" id="1_036b0"]
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
 [ext_resource type="Script" uid="uid://cvqsyxc2bhd25" path="res://weapons/weapon_slots.gd" id="1_gbfbk"]
 [ext_resource type="Script" uid="uid://ceyvuj3khv7va" path="res://world.gd" id="1_ic0uy"]
+[ext_resource type="Script" uid="uid://cq722234mprhl" path="res://ui.gd" id="2_2o6r5"]
 [ext_resource type="PackedScene" uid="uid://doh0w0if3r85g" path="res://character.tscn" id="2_7bd7c"]
 [ext_resource type="Texture2D" uid="uid://ku6mgjo42sk3" path="res://weapons/gun/pistol.png" id="3_ioo17"]
 [ext_resource type="PackedScene" uid="uid://jyo3eu0d12ca" path="res://Character/Zombie.tscn" id="3_tlwt5"]
@@ -18,6 +19,17 @@ bg_color = Color(0.144022, 0.648083, 0.875533, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aqk2v"]
 bg_color = Color(0.964706, 0.6, 0.6, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_70uel"]
+font_size = 50
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_2o6r5"]
+font_size = 40
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_k3n1d"]
 
@@ -133,6 +145,7 @@ size = Vector3(3, 0.5, 3)
 script = ExtResource("1_ic0uy")
 
 [node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("2_2o6r5")
 
 [node name="CenterContainer" type="CenterContainer" parent="UI"]
 offset_right = 1928.0
@@ -205,6 +218,22 @@ custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 6
 texture = ExtResource("4_wse8f")
+
+[node name="TimerLabel" type="Label" parent="UI"]
+offset_left = 3.0
+offset_right = 1920.0
+offset_bottom = 973.0
+text = "00:00"
+label_settings = SubResource("LabelSettings_70uel")
+horizontal_alignment = 1
+
+[node name="Timer" type="Timer" parent="UI"]
+autostart = true
+
+[node name="ScoreLabel" type="Label" parent="UI"]
+offset_right = 381.0
+offset_bottom = 101.0
+label_settings = SubResource("LabelSettings_2o6r5")
 
 [node name="character" parent="." instance=ExtResource("2_7bd7c")]
 transform = Transform3D(-1, 2.98023e-08, -8.74228e-08, 2.98023e-08, 1, 0, 8.74228e-08, 0, -1, 0, 1, 0)

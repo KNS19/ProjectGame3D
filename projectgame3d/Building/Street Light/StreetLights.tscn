@@ -82,8 +82,4 @@ mesh = SubResource("ArrayMesh_27bwg")
 skeleton = NodePath("")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.0381262, 0.999273, 0, -0.999273, -0.0381262, 0, 6.60397, 2.36715)
-light_color = Color(0, 1, 1, 1)
-light_energy = 2.849
-spot_range = 6.90213
-spot_angle = 23.2183
+transform = Transform3D(1, 0, 0, 0, -0.0381262, 0.999273, 0, -0.999273, -0.0381262, 0, 5.62978, 2.36715)

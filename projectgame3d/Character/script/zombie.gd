@@ -15,6 +15,7 @@ var is_attacking: bool = false
 var is_dead: bool = false
 var is_stunned: bool = false # ✅ สถานะสตั้น
 
+var score_value: int = 150  # ปรับค่าได้ตามประเภทซอมบี้
 # --- Animations ---
 const ANIM_WALK = "Armature|Walk2"
 const ANIM_IDLE = "Armature|Idle"
@@ -106,6 +107,12 @@ func _die():
 		_play_animation_safe(ANIM_DEATH)
 		if is_instance_valid(anim):
 			await anim.animation_finished
+			
+		
+		var game_ui = get_tree().get_root().find_child("UI", true, false) # สมมติตามชื่อ
+		# 2. เรียกฟังก์ชันเพิ่มสกอร์
+		if game_ui:
+			game_ui.add_kill_score(150) # เพิ่ม 1 คะแนน
 	queue_free()
 
 # --------------------------------------------------------------------------------

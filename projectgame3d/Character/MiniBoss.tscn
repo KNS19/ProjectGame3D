@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=4 uid="uid://qwneja0cc3dx"]
+[gd_scene load_steps=33 format=4 uid="uid://qwneja0cc3dx"]
 
 [ext_resource type="Script" uid="uid://cfrjw4j5un0yd" path="res://Character/script/mini_boss.gd" id="1_1od1h"]
 [ext_resource type="Texture2D" uid="uid://dt0oy6klhhh5y" path="res://Character/Zombie (3)_Zombie_Atlas.png" id="1_5sjlp"]
@@ -6709,9 +6709,6 @@ _data = {
 &"CharacterArmature|Yes": SubResource("Animation_ietjj")
 }
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_1od1h"]
-size = Vector3(79.3904, 6, 71.663)
-
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_y7vfh"]
 radius = 0.353438
 height = 1.55836
@@ -7245,15 +7242,6 @@ shape = SubResource("SphereShape3D_1od1h")
 libraries = {
 &"": SubResource("AnimationLibrary_o6wf6")
 }
-
-[node name="DetectionArea" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0195465)
-collision_layer = 0
-collision_mask = 2
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0573397, 3.5, 4.03228)
-shape = SubResource("BoxShape3D_1od1h")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.999506, 0.0314282, 0, -0.0314282, 0.999506, 0, 0.807559, -0.0743242)

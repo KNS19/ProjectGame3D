@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://ga4brol6kes6"]
+[gd_scene load_steps=57 format=3 uid="uid://ga4brol6kes6"]
 
 [ext_resource type="Texture2D" uid="uid://dchrq52ekajcy" path="res://weapons/sword/katana.png" id="1_036b0"]
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://rafw80j1xwe8" path="res://weapons/medic/medic.png" id="4_wse8f"]
 [ext_resource type="PackedScene" uid="uid://qwneja0cc3dx" path="res://Character/MiniBoss.tscn" id="9_ioo17"]
 [ext_resource type="PackedScene" uid="uid://bij7s40wd80t5" path="res://Building/Street Light/Street.tscn" id="10_wse8f"]
-[ext_resource type="PackedScene" path="res://Building/Street Light/dirt_floor.tscn" id="12_cbp6q"]
+[ext_resource type="PackedScene" uid="uid://cjvphkxh0af3c" path="res://Building/Street Light/dirt_floor.tscn" id="12_cbp6q"]
 [ext_resource type="PackedScene" uid="uid://cw3ewsvgwxnr4" path="res://Building/Street Light/StreetLights.tscn" id="12_k3n1d"]
 [ext_resource type="PackedScene" uid="uid://brx03xp4mlph4" path="res://Building/Street Light/Cross walk.tscn" id="14_70uel"]
 [ext_resource type="PackedScene" uid="uid://iac8qj64xc0w" path="res://Building/Barier/Plastic Barrier.tscn" id="15_hiqwa"]
@@ -149,6 +149,9 @@ size = Vector3(3.46777, 1.81433, 0.894897)
 albedo_texture = ExtResource("22_il2jm")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mc2jv"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gggvi"]
+size = Vector3(0.778564, 0.740601, 1.20825)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4h6ng"]
 size = Vector3(0.655396, 0.909302, 0.287025)
@@ -1174,20 +1177,48 @@ transform = Transform3D(4.1323, 0, 0, 0, 4.1323, 0, 0, 0, 4.1323, -70, 0, -70)
 mesh = ExtResource("25_mc2jv")
 skeleton = NodePath("../LargeBuildingA/StaticBody3D")
 
+[node name="StaticBody3D" type="StaticBody3D" parent="House/Skyscraper"]
+collision_mask = 15
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="House/Skyscraper/StaticBody3D"]
+transform = Transform3D(8.51807, 0, 0, 0, 8.51807, 0, 0, 0, 8.51807, 0.265154, -1.10479, -0.0239143)
+shape = SubResource("BoxShape3D_gggvi")
+
 [node name="Skyscraper2" type="MeshInstance3D" parent="House"]
 transform = Transform3D(4.1323, 0, 0, 0, 4.1323, 0, 0, 0, 4.1323, 70, 0, -70)
 mesh = ExtResource("25_mc2jv")
 skeleton = NodePath("../LargeBuildingA/StaticBody3D")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="House/Skyscraper2"]
+collision_mask = 15
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="House/Skyscraper2/StaticBody3D"]
+transform = Transform3D(8.51807, 0, 0, 0, 8.51807, 0, 0, 0, 8.51807, 0.265154, -1.10479, -0.0239143)
+shape = SubResource("BoxShape3D_gggvi")
 
 [node name="Skyscraper3" type="MeshInstance3D" parent="House"]
 transform = Transform3D(4.1323, 0, 0, 0, 4.1323, 0, 0, 0, 4.1323, 70, 0, 70)
 mesh = ExtResource("25_mc2jv")
 skeleton = NodePath("../LargeBuildingA/StaticBody3D")
 
+[node name="StaticBody3D" type="StaticBody3D" parent="House/Skyscraper3"]
+collision_mask = 15
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="House/Skyscraper3/StaticBody3D"]
+transform = Transform3D(8.51807, 0, 0, 0, 8.51807, 0, 0, 0, 8.51807, 0.265154, -1.10479, -0.0239143)
+shape = SubResource("BoxShape3D_gggvi")
+
 [node name="Skyscraper4" type="MeshInstance3D" parent="House"]
 transform = Transform3D(4.1323, 0, 0, 0, 4.1323, 0, 0, 0, 4.1323, -70, 0, 70)
 mesh = ExtResource("25_mc2jv")
 skeleton = NodePath("../LargeBuildingA/StaticBody3D")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="House/Skyscraper4"]
+collision_mask = 15
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="House/Skyscraper4/StaticBody3D"]
+transform = Transform3D(8.51807, 0, 0, 0, 8.51807, 0, 0, 0, 8.51807, 0.265154, -1.10479, -0.0239143)
+shape = SubResource("BoxShape3D_gggvi")
 
 [node name="Parking Lot" parent="House" instance=ExtResource("26_4h6ng")]
 transform = Transform3D(10.8601, 0, 0, 0, 10.8601, 0, 0, 0, 10.8601, -83.5855, 1, -25.4341)

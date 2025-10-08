@@ -1,8 +1,11 @@
-[gd_scene load_steps=31 format=4 uid="uid://qwneja0cc3dx"]
+[gd_scene load_steps=34 format=4 uid="uid://qwneja0cc3dx"]
 
 [ext_resource type="Script" uid="uid://cfrjw4j5un0yd" path="res://Character/script/mini_boss.gd" id="1_1od1h"]
 [ext_resource type="Texture2D" uid="uid://dt0oy6klhhh5y" path="res://Character/Zombie (3)_Zombie_Atlas.png" id="1_5sjlp"]
+[ext_resource type="AudioStream" uid="uid://c0sbqet3ro6w4" path="res://sounds/เสียงซอมบี้บอส เฟส 1.mp3" id="3_81kxy"]
 [ext_resource type="AudioStream" uid="uid://ca7u1qogyw65a" path="res://sounds/เสียงซอมบี้บอส.mp3" id="3_y7vfh"]
+[ext_resource type="AudioStream" uid="uid://b4dtw7v2rv5c4" path="res://sounds/เสียงเดิน.mp3" id="5_byf8a"]
+[ext_resource type="AudioStream" uid="uid://bg7rgpai5p3uc" path="res://sounds/เสียงวิ่ง.mp3" id="6_mqwcj"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t0j58"]
 resource_name = "Atlas"
@@ -7257,5 +7260,15 @@ transform = Transform3D(1, 0, 0, 0, 0.999506, 0.0314282, 0, -0.0314282, 0.999506
 shape = SubResource("CapsuleShape3D_y7vfh")
 
 [node name="LoopSfx" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_81kxy")
+parameters/looping = true
+
+[node name="Phase2Sfx" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_y7vfh")
 parameters/looping = true
+
+[node name="WalkSfx" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("5_byf8a")
+
+[node name="RunSfx" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("6_mqwcj")

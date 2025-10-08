@@ -1,8 +1,9 @@
-[gd_scene load_steps=25 format=4 uid="uid://jyo3eu0d12ca"]
+[gd_scene load_steps=26 format=4 uid="uid://jyo3eu0d12ca"]
 
 [ext_resource type="Texture2D" uid="uid://bpmv7tov4144l" path="res://Character/Zombie_ColorPalette.jpg" id="1_a1m80"]
 [ext_resource type="Script" uid="uid://du543fkw1im7i" path="res://Character/script/zombie.gd" id="1_afqop"]
 [ext_resource type="AudioStream" uid="uid://d0kc0wcp5267" path="res://sounds/เสียงซอมบี้ปกติ.mp3" id="3_1vv8a"]
+[ext_resource type="AudioStream" uid="uid://b4dtw7v2rv5c4" path="res://sounds/เสียงเดิน.mp3" id="4_f8pjg"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6o2qk"]
 resource_name = "ColorSwatch"
@@ -4473,3 +4474,6 @@ shape = SubResource("BoxShape3D_afqop")
 [node name="LoopSfx" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_1vv8a")
 parameters/looping = true
+
+[node name="WalkSfx" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_f8pjg")

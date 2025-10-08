@@ -1,13 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://cbo1mapoekyyo"]
+[gd_scene load_steps=3 format=3 uid="uid://cbo1mapoekyyo"]
 
-[ext_resource type="PackedScene" uid="uid://dgf5rv7i28278" path="res://weapons/Pistol.glb" id="1_bg532"]
+[ext_resource type="PackedScene" uid="uid://dwtgpdjf11ly8" path="res://weapons/gun/Animated Pistol.glb" id="1_bg532"]
 [ext_resource type="Script" uid="uid://cndkl22ctiw1d" path="res://weapons/gun/pistol.gd" id="2_vs7sk"]
-[ext_resource type="PackedScene" uid="uid://cttnjam02t3fb" path="res://weapons/gun/bullet.tscn" id="3_v8arh"]
 
-[node name="Pistol" node_paths=PackedStringArray("muzzle") instance=ExtResource("1_bg532")]
+[node name="Pistol" instance=ExtResource("1_bg532")]
 script = ExtResource("2_vs7sk")
-muzzle = NodePath("RootNode/Marker3D")
-bullet_scene = ExtResource("3_v8arh")
+anim_player_path = NodePath("AnimationPlayer")
+
+[node name="Skeleton3D" parent="RootNode/PistolArmature" index="0"]
+bones/0/rotation = Quaternion(0.5, 0.5, 0.5, 0.5)
 
 [node name="Marker3D" type="Marker3D" parent="RootNode" index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.43522, 0.541345, 0)
+transform = Transform3D(0.01, 0, 0, 0, -1.34121e-09, -0.0112509, 0, 0.01, -1.19209e-09, 0.0143522, -7.26057e-10, 0.00541345)

@@ -1,141 +1,194 @@
-# pistol.gd — ยิงกระสุนเป็น "projectile" (มีซีนกระสุน Bullet.tscn) ออกจากปลายลำกล้อง
-# โค้ดนี้คอมเมนต์ละเอียดอธิบายทุกส่วนว่าทำอะไร
+# Pistol.gd — Hitscan + External/Particle Muzzle + Animations
+extends Node3D
+class_name Pistol
+signal reload_started
+signal reload_finished
 
-extends Node3D  # ปืนเป็นโหนด 3D ทั่วไป
+# ===== ammo =====
+@export var mag_size: int = 12                 # ความจุแม็ก
+@export var ammo_in_mag: int = 12              # กระสุนที่เหลือในแม็กตอนเริ่ม
+@export var ammo_reserve: int = 72             # กระสุนสำรองที่พกอยู่
+@export var allow_dry_fire_click: bool = true  # ให้คลิกแห้งเมื่อแม็กว่าง
 
-# -------------------- ตัวแปรตั้งค่าได้จาก Inspector --------------------
+@export var damage: float = 20.0
+@export var range: float = 200.0                 # ระยะยิงสูงสุด
+@export var fire_rate: float = 6.0               # นัด/วินาที
 
-@export var bullet_pitch_fix_deg: float = 0.0   # ชดเชยมุม "ก้ม/เงย" (แกน X) ของโมเดลกระสุน หากหัวกระสุนชี้แกนไม่ตรง
-@export var bullet_yaw_fix_deg: float = 0.0     # ชดเชยมุม "หมุนซ้าย/ขวา" (แกน Y)
-@export var bullet_roll_fix_deg: float = 0.0    # ชดเชยมุม "กลิ้ง/เอียง" (แกน Z)
+# ---- Nodes / assets ----
+@export var camera_path: NodePath                # Camera3D ของผู้เล่น
+@export var muzzle_path: NodePath = ^"Muzzle"    # Marker3D ปลายลำกล้อง
+@export var impact_scene: PackedScene            # เอฟเฟกต์โดนเป้า
+@export var muzzle_flash_scene: PackedScene      # เอฟเฟกต์ปืนจากภายนอก (.tscn/.glb)
+@export var use_layers_mask: int = 0             # 0 = ใช้ mask ของโลก
 
-@export var fire_rate: float = 6.0              # อัตรายิง (นัด/วินาที) → คูลดาวน์ = 1 / fire_rate
-@export var damage: int = 10                    # ดาเมจของกระสุนนัดนี้
-@export var bullet_speed: float = 60.0          # ความเร็วกระสุน (หน่วย/วินาที) ต้องตรงกับ bullet.gd ที่เอาไปคูณทิศ
-@export var recoil_deg: float = 1.2             # มุมดีดกล้องแนวตั้ง (องศา) ทุกครั้งที่ยิง
-@export var impact_scene: PackedScene            # ซีน FX ตอนกระสุนโดนเป้า (ใส่หรือไม่ใส่ก็ได้)
+# ---- Animation ----
+@export var anim_player_path: NodePath           # ชี้ไปที่ AnimationPlayer ในซีนปืน
+@export var ANIM_FIRE = "PistolArmature|Fire"
+@export var ANIM_RELOAD = "PistolArmature|Reload"
+@export var ANIM_SLIDE = "PistolArmature|Slide"
+@export var fire_anim_restart: bool = true       # ยิงซ้ำให้รีสตาร์ทคลิปได้ไหม
 
-@export var muzzle: Node3D                       # จุด "ปลายลำกล้อง" (Marker3D/Node3D) ใช้เป็นตำแหน่งสปอว์นกระสุน
-@export var bullet_scene: PackedScene            # ซีนกระสุน (root ควรเป็น Node3D และแนบ bullet.gd)
-@export var shoot_sfx: AudioStreamPlayer3D       # เสียงปืน (ออปชัน)
-@export var anim_player: AnimationPlayer         # แอนิเมชันปืน (ออปชัน) เช่นมีคลิปชื่อ "fire"
-@export var muzzle_flash: GPUParticles3D         # เอฟเฟกต์ไฟปากกระบอก (ออปชัน)
-@export var camera: Camera3D                     # กล้องผู้เล่น ใช้หา"ทิศเล็ง"ให้กระสุนยิงไป
+@onready var _cam: Camera3D = get_node_or_null(camera_path)
+@onready var _muzzle: Marker3D = get_node_or_null(muzzle_path)
+@onready var _sfx: AudioStreamPlayer3D = $ShootSfx if has_node("ShootSfx") else null
+@onready var _flash_particle: GPUParticles3D = $MuzzleFlash if has_node("MuzzleFlash") else null
+@onready var _anim: AnimationPlayer = get_node_or_null(anim_player_path)
+@onready var _dry_sfx: AudioStreamPlayer3D = $DrySfx if has_node("DrySfx") else null
 
-@export var muzzle_spawn_offset: float = 0.35    # ดันตำแหน่งเกิดกระสุนออกจากปลายลำกล้องอีกหน่อย กันชนปืน/แขนตัวละคร
+var _last_shot_time := -9999.0
+var _is_reloading := false
 
-# -------------------- ตัวแปรภายใน --------------------
+func _ready() -> void:
+	# fallback: ใช้ active camera ของ viewport ถ้าไม่ได้ assign
+	if _cam == null:
+		_cam = get_viewport().get_camera_3d()
 
-var _can_fire := true                            # ตัวล็อกคูลดาวน์ ป้องกันกดยิงรัวเกิน fire_rate
-@onready var _character := _find_character()     # เก็บอ้างอิงตัวละครผู้ถือปืน (ไว้ exclude collider ตอนยิง ray หาเป้า)
+	if _anim:
+		_anim.animation_finished.connect(_on_anim_finished)
 
-# -------------------- ยูทิลิตี้: หา CharacterBody3D ผู้ถือปืน --------------------
-
-func _find_character() -> Node:
-	# ไต่ขึ้นตามพาเรนต์จนเจอโหนดประเภท CharacterBody3D
-	var n: Node = self
-	while n and not (n is CharacterBody3D):
-		n = n.get_parent()
-	return n
-
-# -------------------- ยูทิลิตี้: รวม RID ของคอลลิเดอร์ใต้โหนด (แบบ recursive) --------------------
-
-func _collect_colliders_rids(root: Node, into: Array[RID]) -> void:
-	# ใช้เมื่อจะยิง ray จาก "กล้อง" หาเป้า เพื่อ exclude ร่างผู้ยิง/ปืน/มัดเซิล ไม่ให้ ray ชนตัวเอง
-	var stack: Array[Node] = [root]
-	while stack.size() > 0:
-		var n = stack.pop_back()
-		var co := n as CollisionObject3D
-		if co:
-			into.append(co.get_rid())           # เก็บ RID ของคอลลิเดอร์ไว้ในลิสต์
-		for c in n.get_children():
-			stack.append(c)                     # ไล่ลูกทุกตัว
-
-# -------------------- คำนวณ "ทิศยิง" จากกล้อง (crosshair) → แปลงเป็นทิศจากปลายลำกล้อง --------------------
-
-func _get_aim_dir() -> Vector3:
-	# ถ้าไม่มีกล้องหรือไม่มีมัดเซิล ให้ยิงไปตาม -Z ของปืนเพื่อกันพัง
-	if camera == null or muzzle == null:
-		return -global_transform.basis.z
-
-	# จุดกำเนิดและทิศของกล้อง (Godot กล้องมองไปทาง -Z)
-	var cam_origin := camera.global_transform.origin
-	var cam_forward := -camera.global_transform.basis.z
-
-	# สร้าง ray จาก "กล้อง → ไกลมาก" เพื่อหาจุดเล็ง (ชนกำแพง/ศัตรูก็จะได้จุดชน)
-	var space := get_world_3d().direct_space_state
-	var rq := PhysicsRayQueryParameters3D.new()
-	rq.from = cam_origin
-	rq.to   = cam_origin + cam_forward * 10000.0
-
-	# exclude คอลลิเดอร์ทั้งหมดของ "ตัวละคร + ปืน + มัดเซิล" ไม่ให้ ray เล็งชนตัวเอง
-	var ex: Array[RID] = []
-	if _character:
-		_collect_colliders_rids(_character, ex)  # ตัวละครทั้งตัว (บอดี้/แขน/กล้องที่มี collider)
-	_collect_colliders_rids(self, ex)            # ปืนและลูก ๆ (ถ้ามี collider)
-	if muzzle:
-		_collect_colliders_rids(muzzle, ex)      # มัดเซิล (เผื่อใส่ collider)
-	rq.exclude = ex
-
-	# ยิง ray หาเป้า
-	var hit := space.intersect_ray(rq)
-	# aim_point = ตำแหน่งที่ ray จากกล้องชน (ถ้าไม่ชนเลย ใช้ปลายทางไกลสุด)
-	var aim_point = (hit.position if hit else rq.to)
-
-	# ทิศสุดท้าย = เวกเตอร์จาก "ปลายลำกล้อง" → "aim_point"
-	return (aim_point - muzzle.global_transform.origin).normalized()
-
-# -------------------- ฟังก์ชันหลัก: ยิงกระสุน (สร้าง projectile ออกจากปลายลำกล้อง) --------------------
+	if _cam == null:
+		push_warning("Pistol.gd: กรุณาเซ็ต camera_path ให้ชี้ไปยัง Camera3D ของผู้เล่น")
 
 func try_fire() -> void:
-	# 1) กันคูลดาวน์ และถ้าปืนถูกซ่อนไว้ (visible=false) ก็ไม่ยิง
-	if not _can_fire or not visible:
+	if _is_reloading: 
 		return
-	_can_fire = false  # ล็อกยิง ไว้ปลดตอนครบคูลดาวน์
 
-	# 2) เอฟเฟกต์ปืน (แล้วแต่จะมีหรือไม่)
-	if anim_player and anim_player.has_animation("fire"):
-		anim_player.play("fire")       # เล่นคลิปยิง
-	if muzzle_flash:
-		muzzle_flash.restart()         # จุดประกายไฟปากลำกล้อง
-	if shoot_sfx:
-		shoot_sfx.play()               # เล่นเสียงยิง
+# --- เช็คกระสุนในแม็ก ---
+	if ammo_in_mag <= 0:
+		# แม็กว่าง → เล่นสไลด์/เสียงคลิก แล้วไม่ยิง
+		if allow_dry_fire_click and _dry_sfx:
+			_dry_sfx.play()
+		# (ถ้ามีคลิป Slide ของปืน)
+		play_slide()
+		return
 
-	# 3) ต้องมีซีนกระสุนและมัดเซิลก่อนถึงจะยิง projectile ได้
-	if bullet_scene == null or muzzle == null:
-		push_warning("ตั้งค่า 'bullet_scene' และ 'muzzle' ใน Inspector ให้เรียบร้อยก่อน")
+	# --- คูลดาวน์ ---
+	var now := Time.get_ticks_msec() / 1000.0
+	var cooldown = 1.0 / max(0.001, fire_rate)
+	if now - _last_shot_time < cooldown:
+		return
+	_last_shot_time = now
+	# ✅ หักกระสุนในแม็ก 1 นัด
+	ammo_in_mag = max(0, ammo_in_mag - 1)
+	
+	# --- ยิง Ray จากใจกลางจอ ---
+	if _cam == null: 
+		return
+	var vp := get_viewport()
+	var center := vp.get_visible_rect().size * 0.5
+	var origin: Vector3 = _cam.project_ray_origin(center)
+	var dir: Vector3    = _cam.project_ray_normal(center).normalized()
+	var to: Vector3     = origin + dir * range
+
+	var space := get_world_3d().direct_space_state
+	var exclude: Array = [self]
+	var p := get_parent()
+	if p: exclude.append(p)
+	if p and p.get_parent(): exclude.append(p.get_parent())
+
+	var query := PhysicsRayQueryParameters3D.new()
+	query.from = origin
+	query.to = to
+	query.exclude = exclude
+	if use_layers_mask != 0:
+		query.collision_mask = use_layers_mask
+
+	var hit := space.intersect_ray(query)
+
+	# --- เอฟเฟกต์ปากกระบอก + เสียง + แอนิเมชัน ---
+	#_spawn_muzzle_flash()
+	if _sfx: _sfx.play()
+	_play_fire_anim()
+
+	# --- ถ้าโดนเป้า: ดาเมจ + impact ---
+	if hit:
+		var pos: Vector3 = hit.position
+		var normal: Vector3 = hit.normal
+		var collider = hit.collider
+
+		if collider:
+			if collider.has_method("take_damage"):
+				collider.take_damage(damage)
+			elif collider.has_method("apply_damage"):
+				collider.apply_damage(damage)
+			elif collider.has_meta("health"):
+				var hp: float = float(collider.get_meta("health"))
+				collider.set_meta("health", max(0.0, hp - damage))
+
+		if impact_scene:
+			var impact := impact_scene.instantiate()
+			get_tree().current_scene.add_child(impact)
+			impact.global_transform.origin = pos
+			impact.look_at(pos + normal, Vector3.UP)
+
+# -------------------- Reload & Slide API --------------------
+var _pending_reload: int = 0
+func try_reload() -> void:
+	if _is_reloading:
+		return
+	# คำนวณว่าควรเติมกี่นัด
+	var need := mag_size - ammo_in_mag
+	if need <= 0 or ammo_reserve <= 0:
+		return
+
+	_pending_reload = min(need, ammo_reserve)
+	_is_reloading = true
+	reload_started.emit()  
+
+	if _anim and _anim.has_animation(ANIM_RELOAD):
+		_anim.play(ANIM_RELOAD)
+		#_anim.play(ANIM_SLIDE)
 	else:
-		# 3.1) สร้างอินสแตนซ์ของซีนกระสุน
-		var b := bullet_scene.instantiate()
-		# 3.2) เอาไปแปะไว้ใต้ซีนหลัก (world) เพื่อให้กระสุนมีอิสระ
-		get_tree().current_scene.add_child(b)
+		# ถ้าไม่มีคลิป Reload ก็ถือว่ารีโหลดเสร็จทันที
+		_complete_reload()
 
-		# 3.3) ถ้ากระสุนเป็น Node3D (ตามที่คาด) ให้ตั้งค่าตำแหน่ง/หมุน/ความเร็ว
-		if b is Node3D:
-			# คำนวณ "ทิศยิง" ตามกล้อง (เล็ง crosshair) แล้วไปจากปลายลำกล้อง
-			var dir := _get_aim_dir()
+func play_slide() -> void:
+	if _anim and _anim.has_animation(ANIM_SLIDE):
+		_anim.play(ANIM_SLIDE)
 
-			# คำนวณตำแหน่งเกิดกระสุน: ปลายลำกล้อง + ดันไปตามทิศอีกนิด กันชนปืน/แขน
-			var spawn_pos := muzzle.global_transform.origin + dir * muzzle_spawn_offset
+func _on_anim_finished(name: StringName) -> void:
+	if name == ANIM_RELOAD or name == StringName("Reload") or name == StringName("PistolArmature|Reload"):
+		_complete_reload()
 
-			# สร้าง Basis ให้ -Z ของกระสุนชี้ตามทิศยิง (แล้วค่อยชดเชยมุมตามโมเดลกระสุน)
-			var basis := Basis().looking_at(dir, Vector3.UP)
-			basis = basis.rotated(Vector3.RIGHT,   deg_to_rad(bullet_pitch_fix_deg))  # ชดเชยแกน X
-			basis = basis.rotated(Vector3.UP,      deg_to_rad(bullet_yaw_fix_deg))    # ชดเชยแกน Y
-			basis = basis.rotated(Vector3.FORWARD, deg_to_rad(bullet_roll_fix_deg))   # ชดเชยแกน Z
+func _complete_reload() -> void:
+	if _pending_reload > 0:
+		ammo_in_mag += _pending_reload
+		ammo_reserve -= _pending_reload
+	_pending_reload = 0
+	_is_reloading = false
+	reload_finished.emit() 
+	_anim.play(ANIM_SLIDE)
 
-			# เซ็ตทรานส์ฟอร์มเริ่มต้นของกระสุน (หมุน + ตำแหน่งเกิด)
-			b.global_transform = Transform3D(basis, spawn_pos)
+# -------------------- Internal helpers --------------------
 
-			# ส่งพารามิเตอร์เข้ากระสุนให้เริ่มวิ่ง: ทิศ, ดาเมจ, ความเร็ว, FX, และอ้างผู้ยิง
-			# (bullet.gd ควรมีเมธอด configure(dir, dmg, spd, imp, shooter))
-			if b.has_method("configure"):
-				b.configure(dir, damage, bullet_speed, impact_scene, _character)
+#func _spawn_muzzle_flash() -> void:
+	# ใช้ particle เดิมถ้ามี
+	#if _flash_particle:
+		#_flash_particle.emitting = false
+		#_flash_particle.emitting = true
+		#return
+#
+	# ใช้ซีนเอฟเฟกต์ภายนอก
+	#if muzzle_flash_scene:
+		#var fx := muzzle_flash_scene.instantiate()
+		#get_tree().current_scene.add_child(fx)
+		#if _muzzle:
+			#fx.global_transform = _muzzle.global_transform
+		#else:
+			#fx.global_transform.origin = _cam.project_ray_origin(get_viewport().get_visible_rect().size * 0.5)
+		#get_tree().create_timer(1.0).connect("timeout", Callable(fx, "queue_free"))
 
-	# 4) ดีดกล้องเล็กน้อยเพื่อฟีลลิ่งการยิง
-	if camera and recoil_deg != 0.0:
-		camera.rotation_degrees.x = clamp(camera.rotation_degrees.x - recoil_deg, -89.0, 89.0)
+func _play_fire_anim() -> void:
+	if _anim == null:
+		return
 
-	# 5) ตั้งตัวจับเวลาคูลดาวน์ตาม fire_rate แล้วค่อยปลดล็อกยิง
-	await get_tree().create_timer(1.0 / max(0.001, fire_rate)).timeout
-	_can_fire = true
+	# ถ้ามีคลิป Fire ให้เล่น (เลือกชื่อสำรองอัตโนมัติ)
+	var clip: StringName = ANIM_FIRE
+	if not _anim.has_animation(clip):
+		if _anim.has_animation("Fire"): clip = "Fire"
+		elif _anim.has_animation("PistolArmature|Fire"): clip = "PistolArmature|Fire"
+		else: return
+
+	if fire_anim_restart:
+		_anim.stop(true) # reset เพื่อยิงติดนิ้ว
+	_anim.play(clip)

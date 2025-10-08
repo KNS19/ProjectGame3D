@@ -1,3 +1,4 @@
+#character.gd
 extends CharacterBody3D
 
 # --- Constants ---
@@ -48,6 +49,7 @@ var has_gun = false
 var is_aiming = false  
 var is_shooting = false
 var default_fov = 70.0
+var is_reloading_gun: bool = false
 @export var aim_fov = 55.0
 @export var shoot_recover_time: float = 0.4
 
@@ -90,6 +92,9 @@ var is_healing: bool = false
 @export var ANIM_SHOOT_GUN = "CharacterArmature|Idle_Gun_Shoot"
 @export var ANIM_RUN_SHOOT = "CharacterArmature|Run_Shoot"
 @export var ANIM_SHOOT_ALT = "CharacterArmature|Gun_Shoot"
+@export var ANIM_FIRE = "PistolArmature|Fire"
+@export var ANIM_RELOAD = "PistolArmature|Reload"
+@export var ANIM_SLIDE = "PistolArmature|Slide"
 
 @export var ANIM_IDLE_SWORD = "CharacterArmature|Idle_Sword"
 @export var ANIM_SLASH_SWORD = "CharacterArmature|Sword_Slash"
@@ -103,27 +108,40 @@ func _ready():
 		health_bar.max_value = max_health
 		health_bar.value = health
 
+	# ✅ ต่อสัญญาณจากปืนให้ถูกอินเดนต์ และเช็กว่ามีโหนดจริง
+	if is_instance_valid(pistol):
+		# ป้องกันเคสต่อซ้ำ (เช่นเข้า-ออกฉาก)
+		if not pistol.is_connected("reload_finished", Callable(self, "_on_pistol_reload_finished")):
+			pistol.connect("reload_finished", Callable(self, "_on_pistol_reload_finished"))
+
 	has_gun = false
 	if camera:
 		default_fov = camera.fov
 
 	_hide_all_weapons_in_slot()
 	if is_instance_valid(pistol): pistol.visible = false
-	if is_instance_valid(sword): sword.visible = false
-	if is_instance_valid(medic): medic.visible = false
+	if is_instance_valid(sword):  sword.visible  = false
+	if is_instance_valid(medic):  medic.visible  = false
 
 	if anim_player and anim_player.has_animation(ANIM_IDLE):
 		anim_player.play(ANIM_IDLE)
-		
+
 	if is_instance_valid(punch_L): punch_L.add_to_group("player_weapon")
 	if is_instance_valid(punch_R): punch_R.add_to_group("player_weapon")
-	if is_instance_valid(kick_L): kick_L.add_to_group("player_weapon")
-	if is_instance_valid(kick_R): kick_R.add_to_group("player_weapon")
+	if is_instance_valid(kick_L):  kick_L.add_to_group("player_weapon")
+	if is_instance_valid(kick_R):  kick_R.add_to_group("player_weapon")
 
 	_disable_all_melee_hitboxes() # ปิด hitbox ตอนเริ่มเกม
-	
+
 	if weapon_ui and weapon_ui.has_method("update_slots"):
 		weapon_ui.update_slots(has_sword, has_gun, has_medic)
+
+# ฟังก์ชันรับสัญญาณรีโหลดเสร็จ
+func _on_pistol_reload_finished() -> void:
+	is_reloading_gun = false
+	if anim_player and anim_player.has_animation(ANIM_IDLE_GUN):
+		anim_player.play(ANIM_IDLE_GUN)
+
 # -----------------------------------------------
 # INPUT & MOVEMENT
 # -----------------------------------------------
@@ -163,6 +181,15 @@ func _unhandled_key_input(_event):
 	if Input.is_action_just_pressed("equip_3"):
 		_toggle_medic()
 		anim_player.play(ANIM_IDLE_SWORD)
+
+	# กด R เพื่อ reload (เฉพาะตอนถือปืน)
+	if Input.is_action_just_pressed("reload"):
+		if has_gun and is_instance_valid(pistol) and pistol.has_method("try_reload"):
+			is_reloading_gun = true 
+			pistol.try_reload()
+			# (ตัวเลือก) เล่นท่าร่างกายตอนรีโหลด ถ้ามี
+			if anim_player and anim_player.has_animation(ANIM_SLASH_SWORD):
+				anim_player.play(ANIM_SLASH_SWORD)  # หรือคลิปรีโหลดของ "ตัวละคร" ถ้ามี
 
 func _do_attack(current_time: float) -> void:
 	is_attacking = true
@@ -381,20 +408,22 @@ func _shoot_gun():
 	is_shooting = true
 
 	var moving_now := Input.get_vector("move_left","move_right","move_forward","move_backward").length() > 0.1
-
+	# --- เล่นคลิปฝั่ง "ตัวละคร" (ร่างกาย) ---
 	if anim_player:
+		# ถ้าวิ่ง/เดินตอนยิง และมีคลิป Run_Shoot ให้เล่นอันนั้นก่อน
 		if moving_now and anim_player.has_animation(ANIM_RUN_SHOOT):
 			anim_player.play(ANIM_RUN_SHOOT)
 		elif anim_player.has_animation(ANIM_SHOOT_GUN):
 			anim_player.play(ANIM_SHOOT_GUN)
 		elif anim_player.has_animation(ANIM_SHOOT_ALT):
 			anim_player.play(ANIM_SHOOT_ALT)
-
+	# --- ยิงปืนจริง (hitscan + เอฟเฟกต์ อยู่ใน Pistol.gd) ---
 	if pistol and pistol.has_method("try_fire"):
 		pistol.try_fire()
-
+	# --- หน่วงเวลาคืนท่า (ให้มือปืน/ตัวละครมีเวลาจบคีย์เฟรม) ---
+	# แนะนำตั้ง shoot_recover_time ≈ 1.0 / fire_rate ของปืน
 	await get_tree().create_timer(shoot_recover_time).timeout
-
+	# --- คืนท่าตามสถานะหลังยิง (ผู้เล่นอาจเริ่ม/หยุดเดินระหว่างรอ) ---
 	var move_vec := Input.get_vector("move_left","move_right","move_forward","move_backward")
 	var moving_after := move_vec.length() > 0.1
 	var running_after = Input.is_action_pressed("run") and stamina > 0
@@ -443,7 +472,7 @@ func _use_heal():
 	
 func _update_animation(input_vec: Vector2):
 	# --- อย่า override animation ตอนกำลังโจมตี, สวิงดาบ, ยิง หรือใช้ยา ---
-	if is_attacking or is_rolling or is_shooting or is_swing or is_healing:
+	if is_attacking or is_rolling or is_shooting or is_swing or is_healing or is_reloading_gun:
 		return
 	
 	var moving = input_vec.length() > 0.1

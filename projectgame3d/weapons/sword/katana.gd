@@ -1,6 +1,6 @@
 extends Node3D
 
-@export var damage: int = 25
+@export var damage: int = 30
 @onready var area: Area3D = $Area3D
 
 var _is_swinging: bool = false

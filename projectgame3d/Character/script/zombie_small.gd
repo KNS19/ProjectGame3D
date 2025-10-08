@@ -89,7 +89,6 @@ func take_damage(damage: float, hit_part: String):
 	if health <= 0 and not is_dead:
 		_die()
 
-
 func _do_hit_reaction():
 	is_stunned = true
 	is_attacking = false

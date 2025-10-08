@@ -392,7 +392,7 @@ font_size = 64
 transform = Transform3D(-0.0663013, 0, -0.394467, 0, 0.4, 0, 0.394467, 0, -0.0663013, 18.5286, 1.0336, -8.48825)
 
 [node name="ZombieSmall" parent="." instance=ExtResource("4_aqk2v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.726, 5.35954, -0.474068)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 58.6621, 7.26853, -4.89477)
 
 [node name="MiniBoss" parent="." instance=ExtResource("9_ioo17")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -12.3759, 1.0009, -7.44402)

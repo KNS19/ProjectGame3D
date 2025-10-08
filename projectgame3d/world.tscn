@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://ga4brol6kes6"]
+[gd_scene load_steps=41 format=3 uid="uid://ga4brol6kes6"]
 
 [ext_resource type="Texture2D" uid="uid://dchrq52ekajcy" path="res://weapons/sword/katana.png" id="1_036b0"]
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://bij7s40wd80t5" path="res://Building/Street Light/Street.tscn" id="10_wse8f"]
 [ext_resource type="PackedScene" uid="uid://cw3ewsvgwxnr4" path="res://Building/Street Light/StreetLights.tscn" id="12_k3n1d"]
 [ext_resource type="PackedScene" uid="uid://brx03xp4mlph4" path="res://Building/Street Light/Cross walk.tscn" id="14_70uel"]
+[ext_resource type="PackedScene" uid="uid://iac8qj64xc0w" path="res://Building/Barier/Plastic Barrier.tscn" id="15_hiqwa"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tlwt5"]
 bg_color = Color(0.144022, 0.648083, 0.875533, 1)
@@ -249,7 +250,7 @@ transform = Transform3D(0.866025, 0.25, -0.433013, 0, 0.866026, 0.5, 0.5, -0.433
 shadow_enabled = true
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
-transform = Transform3D(-0.259511, 0.95431, 0.148144, 0.0268235, 0.160462, -0.986678, -0.965367, -0.25208, -0.0672397, -3.5, 1.5, -0.5)
+transform = Transform3D(-0.259511, 0.95431, 0.148144, 0.0268235, 0.160462, -0.986678, -0.965367, -0.25208, -0.0672397, -2.14639, 1.5, 6.31043)
 collision_layer = 4
 collision_mask = 7
 mass = 0.1
@@ -1217,3 +1218,6 @@ transform = Transform3D(0.988338, 0, 0, 0, 0.988338, 0, 0, 0, 0.988338, 0.006, 1
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Root Scene/StaticBody3D"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 shape = SubResource("WorldBoundaryShape3D_70uel")
+
+[node name="PlasticBarrier" parent="." instance=ExtResource("15_hiqwa")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1, -5)

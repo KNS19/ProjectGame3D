@@ -5,12 +5,12 @@ extends Node3D
 @export var BossZom: PackedScene
 
 # ตัวแปรตั้งต้น
-var initial_wait_time := 5.0      # เริ่ม spawn ทุก 15 วิ
+var initial_wait_time := 10.0      # เริ่ม spawn ทุก 15 วิ
 var decrease_interval := 10.0      # ทุก 10 วิ ลดความถี่
-var decrease_amount := 0.2         # ลดลงทีละ 0.2 วิ
+var decrease_amount := 0.02         # ลดลงทีละ 0.2 วิ
 var min_wait_time := 2.0           # ต่ำสุดคือ 2 วิ
 
-var boss_interval := 15.0          # Boss จะเกิดทุก 10 วิ
+var boss_interval := 50.0          # Boss จะเกิดทุก 10 วิ
 var boss_count := 1                # เริ่มต้นเกิดทีละ 1 ตัว
 var boss_increase := 1             # ทุกครั้งจะเพิ่มขึ้น 1 ตัว
 

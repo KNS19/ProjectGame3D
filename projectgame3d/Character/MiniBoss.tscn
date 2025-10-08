@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cfrjw4j5un0yd" path="res://Character/script/mini_boss.gd" id="1_1od1h"]
 [ext_resource type="Texture2D" uid="uid://dt0oy6klhhh5y" path="res://Character/Zombie (3)_Zombie_Atlas.png" id="1_5sjlp"]
-[ext_resource type="AudioStream" uid="uid://c0sbqet3ro6w4" path="res://sounds/เสียงซอมบี้บอส เฟส 1.mp3" id="3_81kxy"]
+[ext_resource type="AudioStream" uid="uid://crwoqwaxi4bnt" path="res://sounds/เสียงซอมบี้บอส เฟส 1.mp3" id="3_81kxy"]
 [ext_resource type="AudioStream" uid="uid://ca7u1qogyw65a" path="res://sounds/เสียงซอมบี้บอส.mp3" id="3_y7vfh"]
 [ext_resource type="AudioStream" uid="uid://b4dtw7v2rv5c4" path="res://sounds/เสียงเดิน.mp3" id="5_byf8a"]
 [ext_resource type="AudioStream" uid="uid://bg7rgpai5p3uc" path="res://sounds/เสียงวิ่ง.mp3" id="6_mqwcj"]

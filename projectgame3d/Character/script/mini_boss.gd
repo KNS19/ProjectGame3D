@@ -12,10 +12,9 @@ const ANIM_RUN = "CharacterArmature|Run_Arms"
 
 @export var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 @export var movement_speed_phase1: float = 2.0
-@export var movement_speed_phase2: float = 5.0
+@export var movement_speed_phase2: float = 6.0
 
 # --- Nodes ---
-@onready var detection_area: Area3D = $DetectionArea
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var attack_Left_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/Hand_Left/Left_Area"
 @onready var attack_Right_area: Area3D = $"RootNode/CharacterArmature/Skeleton3D/Hand_Right/Right_Area"
@@ -45,7 +44,7 @@ var attack_damage_phase1: int = 30
 var attack_cooldown_phase1: float = 2.0
 # Phase 2 Stats
 var attack_damage_phase2: int = 40
-var attack_cooldown_phase2: float = 3.0
+var attack_cooldown_phase2: float = 2.0
 
 # State Timers
 var attack_timer: float = 0.0
@@ -59,9 +58,6 @@ var player_target: CharacterBody3D = null
 # ==============================================================================
 
 func _ready():
-	# 1. เชื่อมต่อสัญญาณ DetectionArea
-	detection_area.body_entered.connect(_on_detection_area_body_entered)
-	detection_area.body_exited.connect(_on_detection_area_body_exited)
 	
 	# 2. เตรียมพื้นที่โจมตีและสัญญาณ
 	attack_Left_area.monitoring = false
@@ -87,9 +83,23 @@ func _physics_process(delta: float):
 		set_state(State.DEAD)
 	
 	if current_state != State.DEAD:
-		# ใช้ Gravity เสมอ
 		if not is_on_floor():
 			velocity.y -= gravity * delta
+
+	# 🧠 NEW: หา player ในฉากโดยไม่ใช้ DetectionArea
+	var players = get_tree().get_nodes_in_group("player")
+	if players.size() > 0:
+		var nearest_player = null
+		var nearest_distance = INF
+		for p in players:
+			if p and p is CharacterBody3D:
+				var dist = global_position.distance_to(p.global_position)
+				if dist < nearest_distance:
+					nearest_distance = dist
+					nearest_player = p
+		player_target = nearest_player
+	else:
+		player_target = null
 
 	# State Machine Logic
 	match current_state:
@@ -103,7 +113,6 @@ func _physics_process(delta: float):
 			do_hit_stun(delta)
 		State.PHASE_TRANSITION:
 			do_phase_transition(delta)
-		# State DEAD ไม่ต้องทำอะไรใน _physics_process นอกจาก set_physics_process(false)
 	
 	move_and_slide()
 	

@@ -22,7 +22,7 @@ const ANIM_SCREAM = "Armature|Scream"
 const ANIM_DEATH = "Armature|Die"
 
 # --- Nodes ---
-@onready var detection_area: Area3D = $DetectionArea
+# ❌ ไม่ใช้ DetectionArea อีกต่อไป
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var head_area: Area3D = $"RootNode/Armature/Skeleton3D/BoneAttachment3D_Head/HeadArea"
 @onready var body_area: Area3D = $"RootNode/Armature/Skeleton3D/BoneAttachment3D_Body/BodyArea"
@@ -30,8 +30,8 @@ const ANIM_DEATH = "Armature|Die"
 @onready var loop_sfx: AudioStreamPlayer3D = $LoopSfx
 
 func _ready():
-	detection_area.body_entered.connect(_on_body_entered)
-	detection_area.body_exited.connect(_on_body_exited)
+	# ✅ ดึงผู้เล่นทุกคนจากกลุ่ม "player" มาใส่ใน list ตั้งแต่เริ่ม
+	players = get_tree().get_nodes_in_group("player")
 
 	if is_instance_valid(head_area):
 		head_area.area_entered.connect(_on_hit_area_entered.bind("Head"))
@@ -47,9 +47,8 @@ func _ready():
 		_play_animation_safe(ANIM_IDLE)
 
 # --------------------------------------------------------------------------------
-## ระบบดาเมจและการตาย
+## ระบบดาเมจและการตาย (ไม่เปลี่ยน)
 # --------------------------------------------------------------------------------
-
 func _on_hit_area_entered(area: Area3D, hit_part: String):
 	if area.is_in_group("player_weapon"):
 		var weapon_node = area.get_parent()
@@ -61,12 +60,10 @@ func _on_hit_area_entered(area: Area3D, hit_part: String):
 					damage_amount = float(val)
 			take_damage(damage_amount, hit_part)
 
-
 func take_damage(damage: float, hit_part: String = "Body"):
 	if is_dead:
 		return
 
-	# ✅ หากโดนโจมตี — เล่นแอนิเมชันโดนตี + สตั้น 0.5 วิ
 	if anim.has_animation(ANIM_HIT_REACTION) and not is_stunned:
 		_do_hit_reaction()
 
@@ -83,27 +80,19 @@ func take_damage(damage: float, hit_part: String = "Body"):
 	if health <= 0 and not is_dead:
 		_die()
 
-
-# ✅ ฟังก์ชันเล่นแอนิเมชันโดนตี + สตั้น
 func _do_hit_reaction():
 	is_stunned = true
 	is_attacking = false
 	is_screaming = false
 	velocity = Vector3.ZERO
-	
-	# เล่นแอนิเมชันโดนตี
 	_play_animation_safe(ANIM_HIT_REACTION)
-	
-	# ✅ ถ้ามีแอนิเมชันนี้จริง
+
 	if anim.has_animation(ANIM_HIT_REACTION):
 		var hit_anim_length = anim.get_animation(ANIM_HIT_REACTION).length
 		await get_tree().create_timer(hit_anim_length).timeout
 	else:
-		# ถ้าไม่มีแอนิเมชันนี้ในไฟล์ ใช้เวลาสั้น ๆ แทน
 		await get_tree().create_timer(0.5).timeout
-	
 	is_stunned = false
-
 
 # --------------------------------------------------------------------------------
 ## ระบบตาย
@@ -120,50 +109,13 @@ func _die():
 	queue_free()
 
 # --------------------------------------------------------------------------------
-## AI และการเคลื่อนที่
+## AI และการเคลื่อนที่ (แก้เฉพาะส่วนนี้)
 # --------------------------------------------------------------------------------
-func _on_body_entered(body):
-	if body.is_in_group("player"):
-		if not players.has(body):
-			players.append(body)
-			if not loop_sfx.playing:
-				loop_sfx.play()  # 🔊 เริ่มเล่นเสียงวน
-			if not is_screaming and not is_attacking and players.size() == 1 and anim.has_animation(ANIM_SCREAM):
-				_do_scream()
-
-func _on_body_exited(body):
-	if players.has(body):
-		players.erase(body)
-
-func _do_scream():
-	is_screaming = true
-	if players.size() > 0:
-		look_at(players[0].global_transform.origin, Vector3.UP, true)
-	_play_animation_safe(ANIM_SCREAM)
-	await anim.animation_finished
-	is_screaming = false
-
-func _do_attack():
-	is_attacking = true
-	_play_animation_safe(ANIM_ATTACK)
-	var attack_time = 1.0
-	if anim.has_animation(ANIM_ATTACK):
-		attack_time = anim.get_animation(ANIM_ATTACK).length
-	await get_tree().create_timer(attack_time * 0.5).timeout
-	_deal_damage()
-	await get_tree().create_timer(attack_time * 0.5).timeout
-	is_attacking = false
-
-func _deal_damage():
-	for p in players:
-		var dist = global_transform.origin.distance_to(p.global_transform.origin)
-		if dist <= ATTACK_RANGE:
-			if p.has_method("take_damage"):
-				p.take_damage(ATTACK_DAMAGE, "zombie_attack")
-
 func _physics_process(delta):
+	# ✅ อัปเดตรายชื่อผู้เล่นทุกเฟรม (ในกรณี player ถูกสร้าง/ลบระหว่างเกม)
+	players = get_tree().get_nodes_in_group("player")
+
 	if is_dead or is_stunned:
-		# หยุด XZ movement แต่ gravity ยังทำงาน
 		velocity.x = 0
 		velocity.z = 0
 		if not is_on_floor():
@@ -192,6 +144,8 @@ func _physics_process(delta):
 	var nearest_dist = global_transform.origin.distance_to(nearest.global_transform.origin)
 
 	for p in players:
+		if not is_instance_valid(p): 
+			continue
 		var d = global_transform.origin.distance_to(p.global_transform.origin)
 		if d < nearest_dist:
 			nearest = p
@@ -215,6 +169,26 @@ func _physics_process(delta):
 			velocity.y -= gravity * delta
 		move_and_slide()
 		_play_animation_safe(ANIM_WALK)
+
+func _do_attack():
+	is_attacking = true
+	_play_animation_safe(ANIM_ATTACK)
+	var attack_time = 1.0
+	if anim.has_animation(ANIM_ATTACK):
+		attack_time = anim.get_animation(ANIM_ATTACK).length
+	await get_tree().create_timer(attack_time * 0.5).timeout
+	_deal_damage()
+	await get_tree().create_timer(attack_time * 0.5).timeout
+	is_attacking = false
+
+func _deal_damage():
+	for p in players:
+		if not is_instance_valid(p):
+			continue
+		var dist = global_transform.origin.distance_to(p.global_transform.origin)
+		if dist <= ATTACK_RANGE:
+			if p.has_method("take_damage"):
+				p.take_damage(ATTACK_DAMAGE, "zombie_attack")
 
 func _play_animation_safe(animation_name: String):
 	if anim and anim.has_animation(animation_name):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=4 uid="uid://jyo3eu0d12ca"]
+[gd_scene load_steps=25 format=4 uid="uid://jyo3eu0d12ca"]
 
 [ext_resource type="Texture2D" uid="uid://bpmv7tov4144l" path="res://Character/Zombie_ColorPalette.jpg" id="1_a1m80"]
 [ext_resource type="Script" uid="uid://du543fkw1im7i" path="res://Character/script/zombie.gd" id="1_afqop"]
@@ -3996,9 +3996,6 @@ _data = {
 &"Armature|Walk2": SubResource("Animation_4lbcw")
 }
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_1vv8a"]
-size = Vector3(57.2551, 6, 39.7247)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_afqop"]
 size = Vector3(1, 3.94421, 1.18042)
 
@@ -4469,14 +4466,6 @@ libraries = {
 &"": SubResource("AnimationLibrary_k70pe")
 }
 
-[node name="DetectionArea" type="Area3D" parent="."]
-collision_layer = 0
-collision_mask = 2
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0524597, 3.5, 18.4017)
-shape = SubResource("BoxShape3D_1vv8a")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0192, 0.232544)
 shape = SubResource("BoxShape3D_afqop")
@@ -4484,5 +4473,3 @@ shape = SubResource("BoxShape3D_afqop")
 [node name="LoopSfx" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_1vv8a")
 parameters/looping = true
-
-[connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]

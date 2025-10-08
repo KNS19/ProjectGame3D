@@ -17,4 +17,5 @@ transform = Transform3D(0.01, 0, 0, 0, -1.34121e-09, -0.0112509, 0, 0.01, -1.192
 
 [node name="ShootSfx" type="AudioStreamPlayer3D" parent="." index="2"]
 stream = ExtResource("3_v8arh")
+volume_db = -20.032
 pitch_scale = 2.0

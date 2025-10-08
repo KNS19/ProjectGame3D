@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjvphkxh0af3c"]
+
+[ext_resource type="PackedScene" uid="uid://dyhr8tbyaqta6" path="res://Building/Dirt Floor Tile.glb" id="1_5tbo6"]
+
+[node name="DirtFloor" instance=ExtResource("1_5tbo6")]

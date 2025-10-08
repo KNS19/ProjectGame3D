@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://ga4brol6kes6"]
+[gd_scene load_steps=45 format=3 uid="uid://ga4brol6kes6"]
 
 [ext_resource type="Texture2D" uid="uid://dchrq52ekajcy" path="res://weapons/sword/katana.png" id="1_036b0"]
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://rafw80j1xwe8" path="res://weapons/medic/medic.png" id="4_wse8f"]
 [ext_resource type="PackedScene" uid="uid://qwneja0cc3dx" path="res://Character/MiniBoss.tscn" id="9_ioo17"]
 [ext_resource type="PackedScene" uid="uid://bij7s40wd80t5" path="res://Building/Street Light/Street.tscn" id="10_wse8f"]
+[ext_resource type="PackedScene" uid="uid://cjvphkxh0af3c" path="res://Building/Street Light/dirt_floor.tscn" id="12_cbp6q"]
 [ext_resource type="PackedScene" uid="uid://cw3ewsvgwxnr4" path="res://Building/Street Light/StreetLights.tscn" id="12_k3n1d"]
 [ext_resource type="PackedScene" uid="uid://brx03xp4mlph4" path="res://Building/Street Light/Cross walk.tscn" id="14_70uel"]
 [ext_resource type="PackedScene" uid="uid://iac8qj64xc0w" path="res://Building/Barier/Plastic Barrier.tscn" id="15_hiqwa"]
@@ -452,6 +453,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0206003, 7.26853, -28.8948)
 
 [node name="MiniBoss" parent="." instance=ExtResource("9_ioo17")]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -12.3759, 1.0009, -7.44402)
+
+[node name="DirtFloor" parent="." instance=ExtResource("12_cbp6q")]
+transform = Transform3D(75, 0, 0, 0, 1, 0, 0, 0, 75, 0, 1, 0)
 
 [node name="road" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 1.42659)

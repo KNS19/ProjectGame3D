@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+[gd_scene load_steps=42 format=3 uid="uid://ga4brol6kes6"]
+=======
 [gd_scene load_steps=44 format=3 uid="uid://ga4brol6kes6"]
+>>>>>>> 4894c5538d62e198c2b03f80be1de28cdc20588a
 
 [ext_resource type="Texture2D" uid="uid://dchrq52ekajcy" path="res://weapons/sword/katana.png" id="1_036b0"]
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
@@ -15,9 +19,13 @@
 [ext_resource type="PackedScene" uid="uid://cw3ewsvgwxnr4" path="res://Building/Street Light/StreetLights.tscn" id="12_k3n1d"]
 [ext_resource type="PackedScene" uid="uid://brx03xp4mlph4" path="res://Building/Street Light/Cross walk.tscn" id="14_70uel"]
 [ext_resource type="PackedScene" uid="uid://iac8qj64xc0w" path="res://Building/Barier/Plastic Barrier.tscn" id="15_hiqwa"]
+<<<<<<< HEAD
+[ext_resource type="AudioStream" uid="uid://d1ykjlnmk4wqm" path="res://sounds/เสียงเมือง.mp3" id="16_2u3nc"]
+=======
 [ext_resource type="PackedScene" uid="uid://bk0j6vta50d1v" path="res://Building/Barier/Container Green.tscn" id="16_ikiii"]
 [ext_resource type="PackedScene" uid="uid://bgc4rl42dyqu7" path="res://Building/Barier/Container Red.tscn" id="17_cbp6q"]
 [ext_resource type="PackedScene" uid="uid://lmvb8bujwyww" path="res://Building/Barier/Broken Car.tscn" id="18_26xuy"]
+>>>>>>> 4894c5538d62e198c2b03f80be1de28cdc20588a
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tlwt5"]
 bg_color = Color(0.144022, 0.648083, 0.875533, 1)
@@ -1229,6 +1237,13 @@ transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 shape = SubResource("WorldBoundaryShape3D_70uel")
 
 [node name="PlasticBarrier" parent="." instance=ExtResource("15_hiqwa")]
+<<<<<<< HEAD
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1, -5)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("16_2u3nc")
+parameters/looping = true
+=======
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.22052, 1, -8)
 
 [node name="ConGreen" parent="." instance=ExtResource("16_ikiii")]
@@ -1242,3 +1257,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1224, 1.13, -8.6384)
 
 [node name="CarBroak" parent="." instance=ExtResource("18_26xuy")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.00462, 1.22803, 18.0209)
+>>>>>>> 4894c5538d62e198c2b03f80be1de28cdc20588a

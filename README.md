@@ -24,7 +24,7 @@ Action(ต่อสู้), Adventure(ผจญภัย)
 
 ## ทดลองเล่น
 
-*LinkGame 
+*LinkGame https://kns19.github.io/ProjectGame3D/
 
 ## Screenshots
 ![ss1](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/images/Screenshot%202025-10-09%20121923.png)

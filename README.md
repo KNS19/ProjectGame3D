@@ -27,16 +27,22 @@ Action(ต่อสู้), Adventure(ผจญภัย)
 *LinkGame 
 
 ## Screenshots
-![Red And Blue ss1](https://github.com/pumipat-ju/projectgame2d/blob/main/projectgame2d/Screenshots/Screenshot%202025-09-03%20170335.png)
+![ss1](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/images/Screenshot%202025-10-09%20121923.png)
 
-![Red And Blue ss2](https://github.com/pumipat-ju/projectgame2d/blob/main/projectgame2d/Screenshots/Screenshot%202025-09-03%20170442.png)
 
 ## ส่วนประกอบตัวละคร
 
-![Brain](projectgame2d/MainCharacter/Red/RedIdle1.png) Brain
-![ซ้อมบี้พนักงาน](projectgame2d/Monster/CanFly/CanFlyIdle1.png) ซ้อมบี้พนักงาน
-![ซ้อมบี้เขียว](projectgame2d/Monster/Bin/BinIdle1.png) ซ้อมบี้เขียว
-![บอสซอมบี้](projectgame2d/Monster/BossTruck/BossTruckWalk1.png) บอสซอมบี้
+![Brain](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/images/Brian.png) 
+Brain
+
+![ซ้อมบี้พนักงาน](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/images/Z.png) 
+ซ้อมบี้พนักงาน
+
+![ซ้อมบี้เขียว](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/images/SZ.png) 
+ซ้อมบี้เขียว
+
+![บอสซอมบี้](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/images/BZ.png) 
+บอสซอมบี้
 
 ## Credits
 

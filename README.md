@@ -54,4 +54,4 @@ Brain
 
 **Sound Effect มาจาก** https://pixabay.com/
 
-**Sound Background มาจาก** https://pixabay.com และ https://pixabay.com/
+**Sound Background มาจาก** https://pixabay.com 

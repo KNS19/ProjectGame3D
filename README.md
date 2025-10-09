@@ -10,7 +10,7 @@ Development Game-3D Version Demo
 663380255-0	นายคณิศร ตรีศาสตร์	AI1
 
 ## ชื่อเกม My name is Brian
-![Red And Blue Logo](projectgame2d/Icon.png)
+![My name is Brian Logo](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/unnamed.jpg)
 
 โลกเต็มไปด้วยเชื้อรา Cordyceps ที่เปลี่ยนมนุษย์เป็นสัตว์ประหลาด
 ทรัพยากรมีจำกัด ผู้เล่นต้องเลือกว่าจะสู้ ลอบเร้น หรือหลีกเลี่ยง Post-Apocalyptic(โลกหลังหายนะ), 

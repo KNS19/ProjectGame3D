@@ -1,0 +1,45 @@
+[gd_scene load_steps=4 format=3 uid="uid://bl6w2amdl1kf3"]
+
+[ext_resource type="Script" uid="uid://cp0vg0wt0vmq3" path="res://start_screen.gd" id="1_ncxyx"]
+[ext_resource type="Texture2D" uid="uid://dbvq1m63wnb2n" path="res://unnamed.jpg" id="2_pevhg"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_pevhg"]
+font_size = 80
+font_color = Color(0.835252, 0.258734, 0.0880565, 1)
+outline_size = 20
+outline_color = Color(0.112336, 0.156307, 0.20025, 1)
+
+[node name="StartScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_ncxyx")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.717647)
+layout_mode = 0
+offset_left = -4.0
+offset_top = -402.0
+offset_right = 1979.0
+offset_bottom = 1214.0
+texture = ExtResource("2_pevhg")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 762.0
+offset_top = 521.0
+offset_right = 1224.0
+offset_bottom = 658.0
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 60
+text = "Start Game"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 1929.0
+offset_bottom = 257.0
+text = "MY NAME IS BRIAN"
+label_settings = SubResource("LabelSettings_pevhg")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

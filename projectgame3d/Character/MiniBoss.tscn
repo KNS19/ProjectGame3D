@@ -7250,6 +7250,8 @@ shape = SubResource("CapsuleShape3D_y7vfh")
 
 [node name="LoopSfx" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("3_81kxy")
+volume_db = -15.512
+pitch_scale = 0.7
 parameters/looping = true
 
 [node name="Phase2Sfx" type="AudioStreamPlayer3D" parent="."]

@@ -34,6 +34,8 @@ func _ready():
 	boss_timer.autostart = true
 	boss_timer.timeout.connect(_on_boss_timer_timeout)
 	add_child(boss_timer)
+	
+
 
 
 # -----------------------

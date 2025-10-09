@@ -85,6 +85,7 @@ var is_healing: bool = false
 @onready var jump_sfx: AudioStreamPlayer3D = $JumpSfx
 @onready var hurt_sfx: AudioStreamPlayer3D = $HurtSfx
 @onready var heal_sfx: AudioStreamPlayer3D = $HealSfx
+@onready var bg_sfx: AudioStreamPlayer3D = $bgSfx
 
 # --- Animations ---
 @export var ANIM_IDLE = "CharacterArmature|Idle"
@@ -108,7 +109,13 @@ var is_healing: bool = false
 @export var ANIM_IDLE_SWORD = "CharacterArmature|Idle_Sword"
 @export var ANIM_SLASH_SWORD = "CharacterArmature|Sword_Slash"
 
+@export var game_over_scene: PackedScene         # กำหนดเป็น PackedScene ผ่าน Inspector (optional)
+@export var game_over_delay: float = 0.5        # เวลารอสักหน่อยก่อนเปลี่ยนซีน (วินาที)
+
 func _ready():
+	if is_instance_valid(bg_sfx):
+		bg_sfx.play()
+	
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	stamina_bar.max_value = max_stamina
 	stamina_bar.value = stamina
@@ -439,6 +446,22 @@ func _die() -> void:
 		anim_player.play(ANIM_DEATH)
 
 	velocity = Vector3.ZERO
+
+	# รอให้แอนิเมชัน/เสียงตายเล่นสั้น ๆ ก่อน เปลี่ยนไปหน้า Game Over
+	# ถ้ามี PackedScene ที่ตั้งไว้ใน Inspector ให้ใช้ change_scene_to(), ถ้าไม่มีก็พยายามโหลดไฟล์มาตรฐาน
+	await get_tree().create_timer(game_over_delay).timeout
+
+	if is_instance_valid(game_over_scene) and game_over_scene != null:
+		get_tree().change_scene_to(game_over_scene)
+	else:
+		# fallback: ถ้าคุณมีไฟล์ GameOver.tscn ในโปรเจค ให้แก้ path นี้เป็นของจริง
+		var fallback_path := "res://game_over.tscn"
+		# ถ้าไฟล์มีอยู่ ให้เปลี่ยนซีนด้วย path
+		if FileAccess.file_exists(fallback_path):
+			get_tree().change_scene_to_file(fallback_path)
+		else:
+			# ถ้าไม่มีไฟล์ GameOver จริง ๆ ให้โชว์ข้อความในคอนโซล (ไม่ทำอะไรต่อ)
+			print("Game Over scene not set and fallback path not found: ", fallback_path)
 
 func _on_body_entered(body: Node3D) -> void:
 	if body.is_in_group("mons"):

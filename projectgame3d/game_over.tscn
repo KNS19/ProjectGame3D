@@ -1,0 +1,77 @@
+[gd_scene load_steps=5 format=3 uid="uid://hrpmv66jrdmh"]
+
+[ext_resource type="Script" uid="uid://bjmoymd3jpkqi" path="res://game_over.gd" id="1_y26ei"]
+[ext_resource type="Texture2D" uid="uid://dbvq1m63wnb2n" path="res://unnamed.jpg" id="2_yxx3c"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_xapjj"]
+font_size = 60
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_y26ei"]
+font_size = 60
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[node name="GameOver" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 28.0
+offset_bottom = 28.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_y26ei")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.564706)
+offset_left = -4.0
+offset_top = -402.0
+offset_right = 1979.0
+offset_bottom = 1214.0
+texture = ExtResource("2_yxx3c")
+
+[node name="PlayAgainButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 577.0
+offset_top = 579.0
+offset_right = 876.0
+offset_bottom = 688.0
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 50
+text = "PlayAgain"
+
+[node name="QuitButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 1097.0
+offset_top = 576.0
+offset_right = 1359.0
+offset_bottom = 690.0
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 50
+text = "Quit"
+
+[node name="ScoreLabel" type="Label" parent="."]
+layout_mode = 0
+offset_top = 105.0
+offset_right = 1920.0
+offset_bottom = 274.0
+text = "0
+"
+label_settings = SubResource("LabelSettings_xapjj")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TimeLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 9.0
+offset_top = 264.0
+offset_right = 1924.0
+offset_bottom = 454.0
+text = "00:00"
+label_settings = SubResource("LabelSettings_y26ei")
+horizontal_alignment = 1
+
+[connection signal="pressed" from="PlayAgainButton" to="." method="_on_play_again_button_pressed"]
+[connection signal="pressed" from="QuitButton" to="." method="_on_quit_button_pressed"]

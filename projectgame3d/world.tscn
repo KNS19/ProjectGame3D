@@ -12,8 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://rafw80j1xwe8" path="res://weapons/medic/medic.png" id="4_wse8f"]
 [ext_resource type="PackedScene" uid="uid://qwneja0cc3dx" path="res://Character/MiniBoss.tscn" id="9_ioo17"]
 [ext_resource type="PackedScene" uid="uid://bij7s40wd80t5" path="res://Building/Street Light/Street.tscn" id="10_wse8f"]
-[ext_resource type="PackedScene" uid="uid://cjvphkxh0af3c" path="res://Building/Street Light/dirt_floor.tscn" id="12_cbp6q"]
-[ext_resource type="PackedScene" uid="uid://cw3ewsvgwxnr4" path="res://Building/Street Light/StreetLights.tscn" id="12_k3n1d"]
+[ext_resource type="PackedScene" path="res://Building/Street Light/dirt_floor.tscn" id="12_cbp6q"]
 [ext_resource type="PackedScene" uid="uid://brx03xp4mlph4" path="res://Building/Street Light/Cross walk.tscn" id="14_70uel"]
 [ext_resource type="PackedScene" uid="uid://iac8qj64xc0w" path="res://Building/Barier/Plastic Barrier.tscn" id="15_hiqwa"]
 [ext_resource type="Texture2D" uid="uid://cbokg0a558t1g" path="res://Building/Town/Apartment building/Apartment_BaseColor.png" id="20_bc84e"]
@@ -22,9 +21,10 @@
 [ext_resource type="ArrayMesh" uid="uid://cybbxqxopclvr" path="res://Building/Town/Bar/CUPIC_BAR.obj" id="23_wjb0r"]
 [ext_resource type="PackedScene" uid="uid://c33cd3cg7obuq" path="res://house.tscn" id="24_mc2jv"]
 [ext_resource type="ArrayMesh" uid="uid://lbf05ck4cybj" path="res://Building/Town/Large Building/large_buildingA.obj" id="24_wjb0r"]
-[ext_resource type="PackedScene" uid="uid://cwpdcw78lac2y" path="res://house2.tscn" id="25_mc2jv"]
+[ext_resource type="PackedScene" path="res://house2.tscn" id="25_mc2jv"]
 [ext_resource type="PackedScene" uid="uid://b200o30p76vuf" path="res://Building/Parking Lot.glb" id="26_4h6ng"]
 [ext_resource type="PackedScene" uid="uid://d12quhtghutx7" path="res://Building/Town/Town House/Building1_Large.fbx" id="26_bo7i5"]
+[ext_resource type="Script" uid="uid://cqdswy25byl2t" path="res://game_manager.gd" id="26_o3ebs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tlwt5"]
 bg_color = Color(0.144022, 0.648083, 0.875533, 1)
@@ -1123,9 +1123,6 @@ physics_material_override = SubResource("PhysicsMaterial_ic0uy")
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 shape = SubResource("WorldBoundaryShape3D_k3n1d")
 
-[node name="StreetLights" parent="." instance=ExtResource("12_k3n1d")]
-transform = Transform3D(-0.0369228, 0, 0.999318, 0, 1, 0, -0.999318, 0, -0.0369228, -14.6266, 1.1904, 0)
-
 [node name="Root Scene" parent="." instance=ExtResource("14_70uel")]
 transform = Transform3D(0.988338, 0, 0, 0, 0.988338, 0, 0, 0, 0.988338, 0.006, 1.13, -0.923)
 
@@ -1295,5 +1292,8 @@ autostart = true
 [node name="House2" parent="." instance=ExtResource("24_mc2jv")]
 
 [node name="Node3D" parent="." instance=ExtResource("25_mc2jv")]
+
+[node name="GameManager" type="Node3D" parent="."]
+script = ExtResource("26_o3ebs")
 
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]

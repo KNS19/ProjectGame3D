@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="ProjectGame3D"
-run/main_scene="res://world.tscn"
+run/main_scene="uid://bl6w2amdl1kf3"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*res://game_manager.gd"
 
 [display]
 

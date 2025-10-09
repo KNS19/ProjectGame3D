@@ -1,5 +1,5 @@
 # Project Game 3D(CP410844) Computer Game Development By AI-Group-1
-Development Game-2D Version Demo
+Development Game-3D Version Demo
 
 **Member of AI Group-1**
 
@@ -33,11 +33,10 @@ Action(ต่อสู้), Adventure(ผจญภัย)
 
 ## ส่วนประกอบตัวละคร
 
-![Rad](projectgame2d/MainCharacter/Red/RedIdle1.png) Red
-![Blue](projectgame2d/MainCharacter/Blue/BlueIdle1.png) Blue
-![ป๋องบิน](projectgame2d/Monster/CanFly/CanFlyIdle1.png) ป๋องบิน
-![ถังสนิม](projectgame2d/Monster/Bin/BinIdle1.png) ถังสนิม
-![รถเก็บขยะ](projectgame2d/Monster/BossTruck/BossTruckWalk1.png) รถเก็บขยะ
+![Brain](projectgame2d/MainCharacter/Red/RedIdle1.png) Brain
+![ซ้อมบี้พนักงาน](projectgame2d/Monster/CanFly/CanFlyIdle1.png) ซ้อมบี้พนักงาน
+![ซ้อมบี้เขียว](projectgame2d/Monster/Bin/BinIdle1.png) ซ้อมบี้เขียว
+![บอสซอมบี้](projectgame2d/Monster/BossTruck/BossTruckWalk1.png) บอสซอมบี้
 
 ## Credits
 

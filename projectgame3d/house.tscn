@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://c33cd3cg7obuq"]
+[gd_scene load_steps=22 format=3 uid="uid://c33cd3cg7obuq"]
 
 [ext_resource type="Texture2D" uid="uid://cbokg0a558t1g" path="res://Building/Town/Apartment building/Apartment_BaseColor.png" id="1_obbqb"]
 [ext_resource type="ArrayMesh" uid="uid://cp567ak55dbgy" path="res://Building/Town/Apartment building/Apartment.obj" id="2_kjvky"]
@@ -45,12 +45,6 @@ size = Vector3(7.95801, 5.02527, 2.41754)
 size = Vector3(0.317383, 2.51965, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_kjvky"]
-size = Vector3(0.317383, 2.51965, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_0l6dv"]
-size = Vector3(0.317383, 2.51965, 1)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_k3v7f"]
 size = Vector3(0.317383, 2.51965, 1)
 
 [node name="House" type="Node3D"]
@@ -395,7 +389,7 @@ transform = Transform3D(3, 0, 0, 0, 10, 0, 0, 0, 4.99017, -0.00494766, 9.02819, 
 shape = SubResource("BoxShape3D_wjb0r")
 
 [node name="Apartment5" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1.41881, 0, 0.00308382, 0, 1, 0, -0.00304594, 0, -1.43646, 2.63163, 1, -147.578)
+transform = Transform3D(-1.41881, 0, 0.00308382, 0, 1, 0, -0.00304594, 0, -1.43646, 0.188238, 1, -147.578)
 material_override = SubResource("StandardMaterial3D_il2jm")
 mesh = ExtResource("2_kjvky")
 skeleton = NodePath("../..")
@@ -629,26 +623,15 @@ collision_mask = 15
 transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 10, -0.180658, 0.759827, 0)
 shape = SubResource("BoxShape3D_kjvky")
 
-[node name="Skyscraper3" type="MeshInstance3D" parent="."]
-transform = Transform3D(4.1323, 0, 0, 0, 4.1323, 0, 0, 0, 4.1323, 70, 0, 70)
-mesh = ExtResource("6_fl8vv")
-skeleton = NodePath("../LargeBuildingA/StaticBody3D")
+[node name="Apartment11" type="MeshInstance3D" parent="."]
+transform = Transform3D(-6.20183e-08, 0, -1.43646, 0, 1, 0, 1.41881, 0, -6.27898e-08, -150.32, 1, -1.38015)
+material_override = SubResource("StandardMaterial3D_il2jm")
+mesh = ExtResource("2_kjvky")
+skeleton = NodePath("../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Skyscraper3"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Apartment11"]
 collision_mask = 15
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Skyscraper3/StaticBody3D"]
-transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 10, -0.180658, 0.759827, 0)
-shape = SubResource("BoxShape3D_0l6dv")
-
-[node name="Skyscraper4" type="MeshInstance3D" parent="."]
-transform = Transform3D(4.1323, 0, 0, 0, 4.1323, 0, 0, 0, 4.1323, -70, 0, 70)
-mesh = ExtResource("6_fl8vv")
-skeleton = NodePath("../LargeBuildingA/StaticBody3D")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Skyscraper4"]
-collision_mask = 15
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Skyscraper4/StaticBody3D"]
-transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 10, -0.180658, 0.759827, 0)
-shape = SubResource("BoxShape3D_k3v7f")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Apartment11/StaticBody3D"]
+transform = Transform3D(3, 0, 0, 0, 10, 0, 0, 0, 4.99017, -0.00494766, 9.02819, -0.656783)
+shape = SubResource("BoxShape3D_wjb0r")

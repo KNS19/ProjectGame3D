@@ -1,4 +1,4 @@
-[gd_scene load_steps=56 format=3 uid="uid://ga4brol6kes6"]
+[gd_scene load_steps=57 format=3 uid="uid://ga4brol6kes6"]
 
 [ext_resource type="Texture2D" uid="uid://dchrq52ekajcy" path="res://weapons/sword/katana.png" id="1_036b0"]
 [ext_resource type="Shader" uid="uid://dtq8vkrpvuqfj" path="res://gridmaterial.tres" id="1_78mpy"]
@@ -22,6 +22,7 @@
 [ext_resource type="ArrayMesh" uid="uid://cybbxqxopclvr" path="res://Building/Town/Bar/CUPIC_BAR.obj" id="23_wjb0r"]
 [ext_resource type="PackedScene" uid="uid://c33cd3cg7obuq" path="res://house.tscn" id="24_mc2jv"]
 [ext_resource type="ArrayMesh" uid="uid://lbf05ck4cybj" path="res://Building/Town/Large Building/large_buildingA.obj" id="24_wjb0r"]
+[ext_resource type="PackedScene" uid="uid://cwpdcw78lac2y" path="res://house2.tscn" id="25_mc2jv"]
 [ext_resource type="PackedScene" uid="uid://b200o30p76vuf" path="res://Building/Parking Lot.glb" id="26_4h6ng"]
 [ext_resource type="PackedScene" uid="uid://d12quhtghutx7" path="res://Building/Town/Town House/Building1_Large.fbx" id="26_bo7i5"]
 
@@ -1261,5 +1262,7 @@ wait_time = 0.5
 autostart = true
 
 [node name="House2" parent="." instance=ExtResource("24_mc2jv")]
+
+[node name="Node3D" parent="." instance=ExtResource("25_mc2jv")]
 
 [connection signal="timeout" from="MobTimer" to="." method="_on_mob_timer_timeout"]

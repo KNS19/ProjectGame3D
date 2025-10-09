@@ -46,14 +46,12 @@ Brain
 
 ## Credits
 
-**Game Template มาจาก** 
+**Game Template มาจาก** https://godotengine.org/asset-library/asset/2242
 
 **TileMap  มาจาก** https://poly.pizza/
 
-**Character มาจาก** https://poly.pizza/
+**Character มาจาก** https://www.piskelapp.com/
 
 **Sound Effect มาจาก** https://pixabay.com/
 
 **Sound Background มาจาก** https://pixabay.com และ https://pixabay.com/
-
-**Background มาจาก** https://aistudio.google.com/

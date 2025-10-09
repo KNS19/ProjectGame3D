@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://doh0w0if3r85g"]
+[gd_scene load_steps=10 format=3 uid="uid://doh0w0if3r85g"]
 
 [ext_resource type="Script" uid="uid://bkgt1c026ks6g" path="res://character.gd" id="1_pjt0s"]
 [ext_resource type="PackedScene" uid="uid://bgxqu6dnybtbf" path="res://Character/CSGMesh3D.tscn" id="2_wa5vi"]
@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://cmll4wq62i3bp" path="res://sounds/เสียงโดด.mp3" id="5_px5sl"]
 [ext_resource type="AudioStream" uid="uid://u3nf3375jsdr" path="res://sounds/เสียงโดนดาเมจ.mp3" id="6_0qfo5"]
 [ext_resource type="AudioStream" uid="uid://hagu7mabeqja" path="res://sounds/เสียงheal.mp3" id="7_yxww1"]
+[ext_resource type="AudioStream" uid="uid://d1ykjlnmk4wqm" path="res://sounds/เสียงเมือง.mp3" id="8_wdpcj"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_8wiiv"]
 
@@ -42,3 +43,8 @@ pitch_scale = 2.0
 
 [node name="HealSfx" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource("7_yxww1")
+
+[node name="bgSfx" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("8_wdpcj")
+volume_db = -25.0
+autoplay = true

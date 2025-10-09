@@ -50,7 +50,7 @@ Brain
 
 **TileMap  มาจาก** https://poly.pizza/
 
-**Character มาจาก** https://www.piskelapp.com/
+**Character มาจาก** https://poly.pizza/
 
 **Sound Effect มาจาก** https://pixabay.com/
 

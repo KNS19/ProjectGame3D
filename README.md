@@ -10,7 +10,7 @@ Development Game-3D Version Demo
 663380255-0	นายคณิศร ตรีศาสตร์	AI1
 
 ## ชื่อเกม My name is Brian
-![Red And Blue Logo](projectgame2d/Icon.png)
+![My name is Brian Logo](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/unnamed.jpg)
 
 โลกเต็มไปด้วยเชื้อรา Cordyceps ที่เปลี่ยนมนุษย์เป็นสัตว์ประหลาด
 ทรัพยากรมีจำกัด ผู้เล่นต้องเลือกว่าจะสู้ ลอบเร้น หรือหลีกเลี่ยง Post-Apocalyptic(โลกหลังหายนะ), 
@@ -27,27 +27,31 @@ Action(ต่อสู้), Adventure(ผจญภัย)
 *LinkGame 
 
 ## Screenshots
-![Red And Blue ss1](https://github.com/pumipat-ju/projectgame2d/blob/main/projectgame2d/Screenshots/Screenshot%202025-09-03%20170335.png)
+![ss1](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/images/Screenshot%202025-10-09%20121923.png)
 
-![Red And Blue ss2](https://github.com/pumipat-ju/projectgame2d/blob/main/projectgame2d/Screenshots/Screenshot%202025-09-03%20170442.png)
 
 ## ส่วนประกอบตัวละคร
 
-![Brain](projectgame2d/MainCharacter/Red/RedIdle1.png) Brain
-![ซ้อมบี้พนักงาน](projectgame2d/Monster/CanFly/CanFlyIdle1.png) ซ้อมบี้พนักงาน
-![ซ้อมบี้เขียว](projectgame2d/Monster/Bin/BinIdle1.png) ซ้อมบี้เขียว
-![บอสซอมบี้](projectgame2d/Monster/BossTruck/BossTruckWalk1.png) บอสซอมบี้
+![Brain](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/images/Brian.png) 
+Brain
+
+![ซ้อมบี้พนักงาน](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/images/Z.png) 
+ซ้อมบี้พนักงาน
+
+![ซ้อมบี้เขียว](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/images/SZ.png) 
+ซ้อมบี้เขียว
+
+![บอสซอมบี้](https://github.com/KNS19/ProjectGame3D/blob/main/projectgame3d/images/BZ.png) 
+บอสซอมบี้
 
 ## Credits
 
-**Game Template มาจาก** 
+**Game Template มาจาก** https://godotengine.org/asset-library/asset/2242
 
 **TileMap  มาจาก** https://poly.pizza/
 
-**Character มาจาก** https://poly.pizza/
+**Character มาจาก** https://www.piskelapp.com/
 
 **Sound Effect มาจาก** https://pixabay.com/
 
 **Sound Background มาจาก** https://pixabay.com และ https://pixabay.com/
-
-**Background มาจาก** https://aistudio.google.com/
